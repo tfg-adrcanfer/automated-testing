@@ -23,7 +23,7 @@ public class InputTextTest {
         mDevice = UiDevice.getInstance(getInstrumentation());
         INAGraph graph= INAGraphBuilder.getInstance().build(mDevice,"esadrcanfer.us.alumno.textinputtest");
         ObjectiveFunction abruptShutdown=new ApplicationCrashObjectiveFunction();
-        RandomSearch algorithm=new RandomSearch(abruptShutdown,100,3);
+        RandomSearch algorithm=new RandomSearch(abruptShutdown,10,2);
         TestCase testCase=algorithm.run(graph,"esadrcanfer.us.alumno.textinputtest");
         System.out.println("Test case found: "+testCase);
         System.out.println("Runnig it...");
