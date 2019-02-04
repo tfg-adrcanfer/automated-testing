@@ -1,5 +1,7 @@
 package esadrcanfer.us.alumno.autotesting.inagraph.actions;
 
+import net.sf.extjwnl.JWNLException;
+
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 

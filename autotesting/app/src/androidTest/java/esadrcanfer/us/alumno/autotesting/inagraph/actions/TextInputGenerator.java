@@ -1,19 +1,16 @@
 package esadrcanfer.us.alumno.autotesting.inagraph.actions;
 
-import java.util.Random;
-
 import androidx.test.uiautomator.UiObject;
-import androidx.test.uiautomator.UiObjectNotFoundException;
-import esadrcanfer.us.alumno.autotesting.util.RandomUtils;
+import esadrcanfer.us.alumno.autotesting.dictionary.DictionaryBasedValueGenerator;
 
 public class TextInputGenerator extends InputGenerator {
 
     public void generateInput(UiObject object) {
-        //for the moment we'll generate random texts of random length.
-        //String text = RandomUtils.randomText(new Random().nextInt());
+
         try {
-            object.setText("Prueba");
-        } catch (UiObjectNotFoundException e) {
+            DictionaryBasedValueGenerator dictionary = new DictionaryBasedValueGenerator(1,1);
+            object.setText(dictionary.generate().toString());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

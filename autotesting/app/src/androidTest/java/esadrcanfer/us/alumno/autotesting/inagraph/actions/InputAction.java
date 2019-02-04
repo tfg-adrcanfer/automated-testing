@@ -11,8 +11,7 @@ public class InputAction extends Action {
         this.inputGenerator=generator;
     }
 
-    public void perform() throws UiObjectNotFoundException
-    {
+    public void perform() throws UiObjectNotFoundException {
         inputGenerator.generateInput(target);
     }
 

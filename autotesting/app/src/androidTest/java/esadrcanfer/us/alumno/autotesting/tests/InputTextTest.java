@@ -1,6 +1,5 @@
 package esadrcanfer.us.alumno.autotesting.tests;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import androidx.test.uiautomator.UiDevice;
@@ -18,7 +17,7 @@ public class InputTextTest {
 
 
     @Test
-    public void test1() throws UiObjectNotFoundException, InterruptedException {
+    public void test1() throws UiObjectNotFoundException {
         UiDevice mDevice;
         mDevice = UiDevice.getInstance(getInstrumentation());
         INAGraph graph= INAGraphBuilder.getInstance().build(mDevice,"esadrcanfer.us.alumno.textinputtest");
@@ -32,6 +31,5 @@ public class InputTextTest {
         testCase.executeAfter();
         System.out.println("Done!");
     }
-
 
 }
