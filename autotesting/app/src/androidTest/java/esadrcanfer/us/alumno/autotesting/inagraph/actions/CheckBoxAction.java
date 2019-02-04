@@ -1,15 +1,26 @@
 package esadrcanfer.us.alumno.autotesting.inagraph.actions;
 
 import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
 
-class CheckBoxAction extends InputAction {
+public class CheckBoxAction extends Action {
+    String targetText;
+    String targetClass;
+    public CheckBoxAction(UiObject target) {
+        super(target);
+        targetText="";
+        targetClass="";
+    }
 
-    public CheckBoxAction(UiObject target, InputGenerator generator) {
-        super(target, generator);
+    @Override
+    public void perform() throws UiObjectNotFoundException {
+        targetText=target.getText();
+        targetClass=target.getClassName();
+        this.target.click();
     }
 
     @Override
     public String toString() {
-        return "clicking on check boxes";
+        return "Click Radio Button " + targetText;
     }
 }

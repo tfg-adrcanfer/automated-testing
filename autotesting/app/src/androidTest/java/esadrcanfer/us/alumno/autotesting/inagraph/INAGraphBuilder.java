@@ -1,18 +1,9 @@
 package esadrcanfer.us.alumno.autotesting.inagraph;
 
-import android.widget.EditText;
-
-import java.util.ArrayList;
 import java.util.List;
 
-import androidx.test.uiautomator.By;
-import androidx.test.uiautomator.BySelector;
-import androidx.test.uiautomator.UiCollection;
 import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject;
-import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.UiObjectNotFoundException;
-import androidx.test.uiautomator.UiSelector;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
 
@@ -63,9 +54,8 @@ public class INAGraphBuilder {
         node.getAvailableActions().addAll(ActionFactory.createButtonActions(node, device));
         node.getAvailableActions().addAll(ActionFactory.createRadioActions(node, device));
         node.getAvailableActions().addAll(ActionFactory.createcheckBoxActions(node, device));
-        node.getAvailableActions().addAll(ActionFactory.createSelectsActions(node, device));
-        node.getAvailableActions().addAll(ActionFactory.createDatesActions(node, device));
-
+        //node.getAvailableActions().addAll(ActionFactory.createSelectsActions(node, device));
+        //node.getAvailableActions().addAll(ActionFactory.createDatesActions(node, device));
     }
 
     public void buildVertex(Node node, UiDevice device) throws UiObjectNotFoundException {

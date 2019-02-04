@@ -13,7 +13,7 @@ import esadrcanfer.us.alumno.autotesting.objectivefunctions.ObjectiveFunction;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
-public class InputTextTest {
+public class TextInputTest {
 
 
     @Test

@@ -15,6 +15,8 @@ import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiScrollable;
 import androidx.test.uiautomator.UiSelector;
+import esadrcanfer.us.alumno.autotesting.inagraph.Node;
+import esadrcanfer.us.alumno.autotesting.inagraph.actions.ElementIdentifier;
 
 public class TestUtilities {
 
@@ -73,5 +75,10 @@ public class TestUtilities {
         for (int i = 0; i < collection.getChildCount(selector); i++)
             result.add(collection.getChildByInstance(selector, i));
         return result;
+    }
+
+    public static List<UiObject> findCheckBox(UiDevice mDevice) {
+        List<UiObject> buttons = ElementIdentifier.findElements(mDevice, "android.widget.CheckBox");
+        return buttons;
     }
 }
