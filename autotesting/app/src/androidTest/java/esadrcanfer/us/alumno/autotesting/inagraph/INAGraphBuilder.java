@@ -1,8 +1,12 @@
 package esadrcanfer.us.alumno.autotesting.inagraph;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
@@ -50,12 +54,18 @@ public class INAGraphBuilder {
     }
 
     public void createActions(Node node, UiDevice device) {
-        node.getAvailableActions().addAll(ActionFactory.createInputActions(node, device));
-        node.getAvailableActions().addAll(ActionFactory.createButtonActions(node, device));
-        node.getAvailableActions().addAll(ActionFactory.createcheckBoxActions(node, device));
-        //node.getAvailableActions().addAll(ActionFactory.createRadioActions(node, device));
-        //node.getAvailableActions().addAll(ActionFactory.createSelectsActions(node, device));
-        //node.getAvailableActions().addAll(ActionFactory.createDatesActions(node, device));
+        Map<UiObject, Action> actions = createActionsAux(device);
+        node.getControls().addAll(actions.keySet());
+        node.getAvailableActions().addAll(actions.values());
+    }
+
+    public Map<UiObject, Action> createActionsAux(UiDevice device) {
+        Map<UiObject, Action> actions = new HashMap<>();
+        actions.putAll(ActionFactory.createButtonActions(device));
+        actions.putAll(ActionFactory.createInputActions(device));
+        actions.putAll(ActionFactory.createCheckBoxActions(device));
+        actions.putAll(ActionFactory.createRadioActions(device));
+        return actions;
     }
 
     public void buildVertex(Node node, UiDevice device) throws UiObjectNotFoundException {
@@ -87,13 +97,10 @@ public class INAGraphBuilder {
 
     public boolean isSameNode(Node currentNode, UiDevice device) throws UiObjectNotFoundException {
         boolean result = true;
-        List<Action> inputTexts = ActionFactory.createInputActions(currentNode, device);
-        List<Action> buttons = ActionFactory.createButtonActions(currentNode, device);
-        for (int i = 0; i < inputTexts.size() && result; i++)
-            result = (result && currentNode.getAvailableActions().contains(inputTexts.get(i)));
-        for (int i = 0; i < buttons.size() && result; i++)
-            result = (result && currentNode.getAvailableActions().contains(buttons.get(i)));
-        result = (result && currentNode.getAvailableActions().size() == (inputTexts.size() + buttons.size()));
+        List<Action> actions = new ArrayList<>(createActionsAux(device).values());
+        for (int i = 0; i < actions.size() && result; i++)
+            result = (result && currentNode.getAvailableActions().contains(actions.get(i)));
+        result = (result && currentNode.getAvailableActions().size() == (actions.size()));
         return result;
     }
 

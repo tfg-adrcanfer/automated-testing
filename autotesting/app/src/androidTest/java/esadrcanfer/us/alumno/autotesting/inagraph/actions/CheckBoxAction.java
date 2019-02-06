@@ -21,6 +21,6 @@ public class CheckBoxAction extends Action {
 
     @Override
     public String toString() {
-        return "Click Radio Button " + targetText;
+        return "Click CheckBox: " + targetText;
     }
 }

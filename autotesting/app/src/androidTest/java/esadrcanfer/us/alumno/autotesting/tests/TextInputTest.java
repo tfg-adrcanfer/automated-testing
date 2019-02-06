@@ -1,5 +1,7 @@
 package esadrcanfer.us.alumno.autotesting.tests;
 
+import android.util.Log;
+
 import org.junit.Test;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
@@ -21,12 +23,12 @@ public class TextInputTest {
         ObjectiveFunction abruptShutdown=new ApplicationCrashObjectiveFunction();
         RandomSearch algorithm=new RandomSearch(abruptShutdown,10,2);
         TestCase testCase=algorithm.run(graph,"esadrcanfer.us.alumno.textinputapp");
-        System.out.println("Test case found: "+testCase);
-        System.out.println("Runnig it...");
+        Log.d("TFG","Test case found: "+testCase);
+        Log.d("TFG","Runnig it...");
         testCase.executeBefore();
         testCase.executeTest();
         testCase.executeAfter();
-        System.out.println("Done!");
+        Log.d("TFG","Done!");
     }
 
 }

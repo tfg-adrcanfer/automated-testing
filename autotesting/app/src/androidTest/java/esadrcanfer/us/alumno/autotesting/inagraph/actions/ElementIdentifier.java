@@ -40,7 +40,7 @@ public class ElementIdentifier {
             result = By.clazz(Button.class);
         } else if (finder.equalsIgnoreCase("EditText")) {
             result = By.clazz(EditText.class);
-        } else if (finder.equalsIgnoreCase("RadioButton")) {
+        } else if (finder.equalsIgnoreCase("RadioGroup")) {
             result = By.clazz(RadioGroup.class);
         } else if (finder.equalsIgnoreCase("CheckBox")) {
             result = By.clazz(CheckBox.class);

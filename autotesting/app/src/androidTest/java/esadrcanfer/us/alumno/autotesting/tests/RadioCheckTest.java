@@ -1,7 +1,6 @@
 package esadrcanfer.us.alumno.autotesting.tests;
 
-import android.widget.CheckBox;
-import android.widget.RadioButton;
+import android.util.Log;
 
 import org.junit.Test;
 
@@ -11,10 +10,11 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import esadrcanfer.us.alumno.autotesting.TestCase;
-import esadrcanfer.us.alumno.autotesting.TestUtilities;
 import esadrcanfer.us.alumno.autotesting.algorithms.RandomSearch;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraph;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraphBuilder;
+import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
+import esadrcanfer.us.alumno.autotesting.inagraph.actions.ButtonAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.CheckBoxAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.ElementIdentifier;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.RadioButtonAction;
@@ -28,25 +28,39 @@ public class RadioCheckTest {
     
     @Test
     public void test1() throws UiObjectNotFoundException {
-        UiDevice mDevice;
-        mDevice = UiDevice.getInstance(getInstrumentation());
-        mDevice.pressHome();
-        TestUtilities.OpenApp("WidgetsApp", true);
-        for (UiObject checkBox: TestUtilities.findCheckBox(mDevice)){
-            CheckBoxAction checkBoxAction = new CheckBoxAction(checkBox);
+        UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
+        INAGraph graph= INAGraphBuilder.getInstance().build(mDevice,"esadrcanfer.us.alumno");
+        Log.i("TFG",graph.getAvailableActions().toString());
+        ObjectiveFunction abruptShutdown=new ApplicationCrashObjectiveFunction();
+        RandomSearch algorithm=new RandomSearch(abruptShutdown,10,3);
+        TestCase testCase=algorithm.run(graph,"esadrcanfer.us.alumno");
+        Log.i("TFG","Test case found: "+testCase);
+        Log.i("TFG","Runnig it...");
+        testCase.executeBefore();
+        testCase.executeTest();
+        testCase.executeAfter();
+        Log.i("TFG","Done!");
+    }
+
+    @Test
+    public void test2() throws UiObjectNotFoundException {
+        UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
+        List<UiObject> radioButtons = ElementIdentifier.findElements(mDevice, "android.widget.RadioGroup");
+        for (UiObject radioButton: radioButtons){
+            RadioButtonInputGenerator radioButtonInputGenerator = new RadioButtonInputGenerator();
+            RadioButtonAction radioButtonAction = new RadioButtonAction(radioButton,radioButtonInputGenerator);
+            radioButtonAction.perform();
+        }
+        List<UiObject> checkboxes = ElementIdentifier.findElements(mDevice, "android.widget.CheckBox");
+        for (UiObject checkbox: checkboxes){
+            CheckBoxAction checkBoxAction = new CheckBoxAction(checkbox);
             checkBoxAction.perform();
         }
-
-        List<UiObject> rButtons = ElementIdentifier.findElements(mDevice, "android.widget.RadioButton");
-        for (int i = 0; i < 10; i++){
-            for (UiObject rbutton: rButtons){
-                RadioButtonInputGenerator radioButtonInputGenerator = new RadioButtonInputGenerator();
-                RadioButtonAction radioButtonAction = new RadioButtonAction(rbutton, radioButtonInputGenerator);
-                radioButtonAction.perform();
-            }
+        List<UiObject> buttons = ElementIdentifier.findElements(mDevice, "android.widget.Button");
+        for (UiObject button: buttons){
+            ButtonAction buttonAction = new ButtonAction(button);
+            buttonAction.perform();
         }
-
-
     }
 
 }
