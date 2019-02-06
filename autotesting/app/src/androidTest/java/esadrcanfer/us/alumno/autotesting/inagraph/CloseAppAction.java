@@ -13,7 +13,7 @@ public class CloseAppAction extends Action {
     }
 
     @Override
-    public void perform() throws UiObjectNotFoundException {
+    public void perform() {
         try {
             Runtime.getRuntime().exec(new String[] {"am", "force-stop", appPackageName});
         } catch (IOException e) {
