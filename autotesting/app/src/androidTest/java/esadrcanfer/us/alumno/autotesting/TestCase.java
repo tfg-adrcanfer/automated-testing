@@ -56,7 +56,7 @@ public class TestCase {
     }
 
     public void executeTest() throws UiObjectNotFoundException {
-        for(Action a:afterActions)
+        for(Action a:testActions)
             a.perform();
     }
 
