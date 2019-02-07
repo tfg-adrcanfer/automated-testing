@@ -6,8 +6,11 @@ import androidx.test.uiautomator.UiObjectNotFoundException;
 public abstract class  Action {
 
     protected UiObject target;
-    public Action(UiObject target){
+    protected ActionType actionType;
+
+    public Action(UiObject target, ActionType actionType){
         this.target=target;
+        this.actionType = actionType;
     }
 
     public abstract void perform() throws UiObjectNotFoundException;
@@ -39,5 +42,11 @@ public abstract class  Action {
         return target;
     }
 
-    public abstract String toString();
+    public String toString(){
+        return actionType+", "+ target.getSelector().toString();
+    }
+
+    public enum ActionType{
+        BUTTON, TEXT, CHECKBOX, RADIO_BUTTON, START, STOP, GO_BACK
+    }
 }

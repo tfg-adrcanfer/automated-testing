@@ -9,7 +9,7 @@ import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
 public class CloseAppAction extends Action {
     String appPackageName;
     public CloseAppAction(String appPackageName) {
-        super(null);
+        super(null, ActionType.STOP);
         this.appPackageName=appPackageName;
 
     }

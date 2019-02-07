@@ -8,7 +8,7 @@ public class GoBackAction extends Action {
     UiDevice device;
 
     GoBackAction(UiDevice device){
-        super(null);
+        super(null, ActionType.GO_BACK);
         this.device=device;
     }
 

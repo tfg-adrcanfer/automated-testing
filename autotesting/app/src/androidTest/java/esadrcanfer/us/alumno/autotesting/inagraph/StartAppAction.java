@@ -11,7 +11,7 @@ public class StartAppAction extends Action {
     String appPackage;
 
     public StartAppAction(String appPackage) {
-        super(null);
+        super(null, ActionType.START);
         this.appPackage=appPackage;
     }
 

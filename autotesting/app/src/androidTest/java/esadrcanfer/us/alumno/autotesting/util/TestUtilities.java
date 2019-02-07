@@ -1,4 +1,4 @@
-package esadrcanfer.us.alumno.autotesting;
+package esadrcanfer.us.alumno.autotesting.util;
 
 import android.os.RemoteException;
 import android.widget.EditText;

@@ -6,7 +6,6 @@ import esadrcanfer.us.alumno.autotesting.dictionary.DictionaryBasedValueGenerato
 public class TextInputGenerator extends InputGenerator {
 
     public void generateInput(UiObject object) {
-
         try {
             DictionaryBasedValueGenerator dictionary = new DictionaryBasedValueGenerator(1,1);
             object.setText(dictionary.generate().toString());
