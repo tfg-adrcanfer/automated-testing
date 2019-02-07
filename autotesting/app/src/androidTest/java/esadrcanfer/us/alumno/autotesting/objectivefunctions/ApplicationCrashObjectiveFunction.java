@@ -12,12 +12,11 @@ public class ApplicationCrashObjectiveFunction implements ObjectiveFunction {
         try {
             test.executeBefore();
             test.executeTest();
-            test.executeAfter();
         }catch(Exception e){
+            Log.d("TFG", "Se ha cerrado la aplicación");
             result=1;
         } finally {
             try {
-                Log.d("TFG", "Se ha cerrado la aplicación");
                 test.executeAfter();
             } catch (UiObjectNotFoundException e1) {
 
