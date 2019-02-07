@@ -46,10 +46,10 @@ public class DinamicRandomSearch {
             Log.d("TFG","Running iteration "+(i+1));
             startApp(appPackage);
             testCaseActions = new ArrayList<>();
-            availableActions = createAction(device, appPackage);
+            availableActions = createAction(device);
             while(testCaseActions.size()<actionsLength && availableActions.size() > 0){
                 if(!isSameNode(device, availableActions)){
-                    availableActions = createAction(device, appPackage);
+                    availableActions = createAction(device);
                 }
                 chosenAction=availableActions.get((int)(Math.random()*availableActions.size()));
                 testCaseActions.add(chosenAction);
@@ -65,18 +65,6 @@ public class DinamicRandomSearch {
             i++;
         }
         return new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions);
-    }
-
-    private TestCase buildRandomTestCase(UiDevice device, String app) throws UiObjectNotFoundException {
-        List<Action> candidateActions=null;
-        Action chosenAction=null;
-        List<Action> availableActions = createAction(device, app);
-        while(testActions.size()<actionsLength && availableActions.size() > 0){
-            candidateActions=availableActions;
-            chosenAction=candidateActions.get((int)(Math.random()*candidateActions.size()));
-            testActions.add(chosenAction);
-        }
-        return new TestCase(app, Collections.EMPTY_SET,beforeActions,testActions,afterActions);
     }
 
     private List<Action> createAction(UiDevice device) {
