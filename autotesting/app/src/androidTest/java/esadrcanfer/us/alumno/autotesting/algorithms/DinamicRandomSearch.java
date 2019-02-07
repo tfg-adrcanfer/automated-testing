@@ -100,10 +100,13 @@ public class DinamicRandomSearch {
     public double evaluate(Action action, String appPackage) {
         double result=0;
         try {
+            UiDevice device = UiDevice.getInstance();
+            String packageName = device.getCurrentPackageName();
             action.perform();
+            if(!packageName.equals(device.getCurrentPackageName())){
+                result = 1;
+            }
         }catch(Exception e){
-            Log.d("TFG", "Se ha cerrado la aplicación");
-            result=1;
         }
         return result;
     }
