@@ -79,13 +79,13 @@ public class DinamicRandomSearch {
         return new TestCase(app, Collections.EMPTY_SET,beforeActions,testActions,afterActions);
     }
 
-    private List<Action> createAction(UiDevice device, String app) throws UiObjectNotFoundException {
+    private List<Action> createAction(UiDevice device) {
         Map<UiObject, Action> actions;
         actions = ActionFactory.createActions(device);
         return new ArrayList<>(actions.values());
     }
 
-    private void closeApp(String appPackage) throws UiObjectNotFoundException {
+    private void closeApp(String appPackage) {
         CloseAppAction action = new CloseAppAction(appPackage);
         action.perform();
     }
