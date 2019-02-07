@@ -47,4 +47,13 @@ public class ActionFactory {
         return result;
 
     }
+
+    public static Map<UiObject, Action> createActions(UiDevice device) {
+        Map<UiObject, Action> actions = new HashMap<>();
+        actions.putAll(ActionFactory.createButtonActions(device));
+        actions.putAll(ActionFactory.createInputActions(device));
+        actions.putAll(ActionFactory.createCheckBoxActions(device));
+        actions.putAll(ActionFactory.createRadioActions(device));
+        return actions;
+    }
 }

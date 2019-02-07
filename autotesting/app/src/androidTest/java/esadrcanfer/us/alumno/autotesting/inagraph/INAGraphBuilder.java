@@ -54,19 +54,11 @@ public class INAGraphBuilder {
     }
 
     public void createActions(Node node, UiDevice device) {
-        Map<UiObject, Action> actions = createActionsAux(device);
+        Map<UiObject, Action> actions = ActionFactory.createActions(device);
         node.getControls().addAll(actions.keySet());
         node.getAvailableActions().addAll(actions.values());
     }
 
-    public Map<UiObject, Action> createActionsAux(UiDevice device) {
-        Map<UiObject, Action> actions = new HashMap<>();
-        actions.putAll(ActionFactory.createButtonActions(device));
-        actions.putAll(ActionFactory.createInputActions(device));
-        actions.putAll(ActionFactory.createCheckBoxActions(device));
-        actions.putAll(ActionFactory.createRadioActions(device));
-        return actions;
-    }
 
     public void buildVertex(Node node, UiDevice device) throws UiObjectNotFoundException {
         for (Action a : node.getAvailableActions()) {
@@ -97,7 +89,7 @@ public class INAGraphBuilder {
 
     public boolean isSameNode(Node currentNode, UiDevice device) throws UiObjectNotFoundException {
         boolean result = true;
-        List<Action> actions = new ArrayList<>(createActionsAux(device).values());
+        List<Action> actions = new ArrayList<>(ActionFactory.createActions(device).values());
         for (int i = 0; i < actions.size() && result; i++)
             result = (result && currentNode.getAvailableActions().contains(actions.get(i)));
         result = (result && currentNode.getAvailableActions().size() == (actions.size()));

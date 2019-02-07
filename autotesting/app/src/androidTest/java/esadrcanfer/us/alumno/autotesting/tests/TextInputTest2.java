@@ -4,28 +4,25 @@ import android.util.Log;
 
 import org.junit.Test;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import esadrcanfer.us.alumno.autotesting.TestCase;
-import esadrcanfer.us.alumno.autotesting.algorithms.DinamicRandomSearch;
+import esadrcanfer.us.alumno.autotesting.util.Writer;
 import esadrcanfer.us.alumno.autotesting.algorithms.RandomSearch;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraph;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraphBuilder;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.ApplicationCrashObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.ObjectiveFunction;
-import esadrcanfer.us.alumno.autotesting.util.Writer;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static java.lang.Thread.sleep;
 
-public class TextInputTest {
+public class TextInputTest2 {
 
-    static String appPackageName = "esadrcanfer.us.alumno.textinputapp";
+    static String appPackageName = "esadrcanfer.us.textinputapp2";
 
     @Test
-    public void testRandomSearch() throws UiObjectNotFoundException {
+    public void test1() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
         INAGraph graph= INAGraphBuilder.getInstance().build(mDevice,appPackageName);
         ObjectiveFunction abruptShutdown=new ApplicationCrashObjectiveFunction();
@@ -40,25 +37,9 @@ public class TextInputTest {
     }
 
     @Test
-    public void testDinamicRandomSearch() throws UiObjectNotFoundException {
-        UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
-        DinamicRandomSearch algorithm=new DinamicRandomSearch(10,2, appPackageName);
-        TestCase testCase=algorithm.run(mDevice, appPackageName);
-        Log.d("TFG","Test case found: "+testCase);
-        Log.d("TFG","Runnig it...");
-        testCase.executeBefore();
-        testCase.executeTest();
-        testCase.executeAfter();
-        Log.d("TFG","Done!");
-    }
-
-    @Test
-    public void testCloseApp() {
+    public void testWriteFile() {
         Writer writer = new Writer();
-        writer.write("Hola");
-        writer.write("¿Cómo estás?");
-        writer.write("Adiós");
         Log.d("TFG",writer.getPath());
+        writer.write("Hello");
     }
-
 }

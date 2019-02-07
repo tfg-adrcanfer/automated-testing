@@ -19,46 +19,55 @@ import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.ObjectiveFunction;
 
 public class DinamicRandomSearch {
-
-    ObjectiveFunction objective;
     long iterations;
     long actionsLength;
+    List<Action> beforeActions;
+    List<Action> afterActions;
+    List<Action> testActions;
 
-    public DinamicRandomSearch(ObjectiveFunction objective, long iterations, int actionsLength) {
-        this.objective = objective;
+    public DinamicRandomSearch(long iterations, int actionsLength, String appPackage) {
         this.iterations = iterations;
         this.actionsLength=actionsLength;
+        beforeActions=new ArrayList<>();
+        beforeActions.add(new StartAppAction(appPackage));
+        afterActions=new ArrayList<>();
+        afterActions.add(new CloseAppAction(appPackage));
+        testActions=new ArrayList<>();
     }
 
-    public TestCase run(UiDevice device, String app) throws UiObjectNotFoundException {
-
-        Log.d("TFG","Running iteration 1");
-        TestCase candidate=buildRandomTestCase(device, app);
-        Log.d("TFG", "Choosen actions: " + candidate);
-        TestCase result=candidate;
-        double eval=objective.evaluate(result);
-        double currentBestEval=eval;
-        int i=1;
+    public TestCase run(UiDevice device, String appPackage) throws UiObjectNotFoundException {
+        int i=0;
+        List<Action> testCaseActions;
+        List<Action> availableActions;
+        Action chosenAction;
+        double currentBestEval = -100;
+        double eval = -100;
         while(i<iterations){
             Log.d("TFG","Running iteration "+(i+1));
-            candidate=buildRandomTestCase(device, app);
-            Log.d("TFG", "Choosen actions: " + candidate);
-            eval=objective.evaluate(candidate);
+            startApp(appPackage);
+            testCaseActions = new ArrayList<>();
+            availableActions = createAction(device, appPackage);
+            while(testCaseActions.size()<actionsLength && availableActions.size() > 0){
+                if(!isSameNode(device, availableActions)){
+                    availableActions = createAction(device, appPackage);
+                }
+                chosenAction=availableActions.get((int)(Math.random()*availableActions.size()));
+                testCaseActions.add(chosenAction);
+                Log.d("TFG","Executing action: "+ chosenAction);
+                eval = evaluate(chosenAction, appPackage);
+            }
             if(eval>currentBestEval){
                 currentBestEval=eval;
-                result=candidate;
+                testActions = new ArrayList<>();
+                testActions.addAll(testCaseActions);
             }
+            closeApp(appPackage);
             i++;
         }
-        return result;
+        return new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions);
     }
 
     private TestCase buildRandomTestCase(UiDevice device, String app) throws UiObjectNotFoundException {
-        List<Action> beforeActions=new ArrayList<>();
-        beforeActions.add(new StartAppAction(app));
-        List<Action> afterActions=new ArrayList<>();
-        afterActions.add(new CloseAppAction(app));
-        List<Action> testActions=new ArrayList<>();
         List<Action> candidateActions=null;
         Action chosenAction=null;
         List<Action> availableActions = createAction(device, app);
@@ -71,13 +80,8 @@ public class DinamicRandomSearch {
     }
 
     private List<Action> createAction(UiDevice device, String app) throws UiObjectNotFoundException {
-        Map<UiObject, Action> actions = new HashMap<>();
-        startApp(app);
-        actions.putAll(ActionFactory.createButtonActions(device));
-        actions.putAll(ActionFactory.createInputActions(device));
-        actions.putAll(ActionFactory.createCheckBoxActions(device));
-        actions.putAll(ActionFactory.createRadioActions(device));
-        closeApp(app);
+        Map<UiObject, Action> actions;
+        actions = ActionFactory.createActions(device);
         return new ArrayList<>(actions.values());
     }
 
@@ -94,5 +98,25 @@ public class DinamicRandomSearch {
         } catch (InterruptedException e) {
 
         }
+    }
+
+    public boolean isSameNode(UiDevice device, List<Action> availableActions) {
+        boolean result = true;
+        List<Action> actions = new ArrayList<>(ActionFactory.createActions(device).values());
+        for (int i = 0; i < actions.size() && result; i++)
+            result = (result && availableActions.contains(actions.get(i)));
+        result = (result && availableActions.size() == (actions.size()));
+        return result;
+    }
+
+    public double evaluate(Action action, String appPackage) {
+        double result=0;
+        try {
+            action.perform();
+        }catch(Exception e){
+            Log.d("TFG", "Se ha cerrado la aplicación");
+            result=1;
+        }
+        return result;
     }
 }

@@ -25,15 +25,17 @@ import esadrcanfer.us.alumno.autotesting.objectivefunctions.ObjectiveFunction;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 public class RadioCheckTest {
-    
+
+    String appPackage = "esadrcanfer.us.alumno";
+
     @Test
     public void test1() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
-        INAGraph graph= INAGraphBuilder.getInstance().build(mDevice,"esadrcanfer.us.alumno");
+        INAGraph graph= INAGraphBuilder.getInstance().build(mDevice,appPackage);
         Log.i("TFG",graph.getAvailableActions().toString());
         ObjectiveFunction abruptShutdown=new ApplicationCrashObjectiveFunction();
         RandomSearch algorithm=new RandomSearch(abruptShutdown,10,3);
-        TestCase testCase=algorithm.run(graph,"esadrcanfer.us.alumno");
+        TestCase testCase=algorithm.run(graph,appPackage);
         Log.i("TFG","Test case found: "+testCase);
         Log.i("TFG","Runnig it...");
         testCase.executeBefore();

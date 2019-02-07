@@ -1,5 +1,7 @@
 package esadrcanfer.us.alumno.autotesting.algorithms;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,14 +27,17 @@ public class RandomSearch {
     }
 
     public TestCase run(INAGraph graph, String app) throws UiObjectNotFoundException {
+        Log.d("TFG","Running iteration 1");
         TestCase candidate=buildRandomTestCase(graph,app);
+        Log.d("TFG", "Choosen actions: " + candidate);
         TestCase result=candidate;
         double eval=objective.evaluate(result);
         double currentBestEval=eval;
         int i=1;
         while(i<iterations){
-            System.out.println("Running iteration "+i);
+            Log.d("TFG","Running iteration "+(i+1));
             candidate=buildRandomTestCase(graph,app);
+            Log.d("TFG", "Choosen actions: " + candidate);
             eval=objective.evaluate(candidate);
             if(eval>currentBestEval){
                 currentBestEval=eval;
@@ -52,10 +57,13 @@ public class RandomSearch {
         List<Action> testActions=new ArrayList<>();
         List<Action> candidateActions=null;
         Action chosenAction=null;
+        //Writer writer = new Writer();
+        //Log.d("TFG", "TestCase File: " + writer.getPath());
         while(testActions.size()<actionsLength && graph.getAvailableActions().size() > 0){
             candidateActions=graph.getAvailableActions();
             chosenAction=candidateActions.get((int)(Math.random()*candidateActions.size()));
             testActions.add(chosenAction);
+            //writer.write(chosenAction.toString());
             graph.performAction(chosenAction);
         }
         return new TestCase(app, Collections.EMPTY_SET,beforeActions,testActions,afterActions);

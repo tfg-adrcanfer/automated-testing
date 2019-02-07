@@ -4,9 +4,6 @@ import android.util.Log;
 
 import org.junit.Test;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import esadrcanfer.us.alumno.autotesting.TestCase;
@@ -20,9 +17,9 @@ import esadrcanfer.us.alumno.autotesting.util.Writer;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
-public class TextInputTest {
+public class Button2Test {
 
-    static String appPackageName = "esadrcanfer.us.alumno.textinputapp";
+    static String appPackageName = "com.example.testingandroid2";
 
     @Test
     public void testRandomSearch() throws UiObjectNotFoundException {
@@ -42,6 +39,7 @@ public class TextInputTest {
     @Test
     public void testDinamicRandomSearch() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
+        ObjectiveFunction abruptShutdown=new ApplicationCrashObjectiveFunction();
         DinamicRandomSearch algorithm=new DinamicRandomSearch(10,2, appPackageName);
         TestCase testCase=algorithm.run(mDevice, appPackageName);
         Log.d("TFG","Test case found: "+testCase);
