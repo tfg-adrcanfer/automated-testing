@@ -7,7 +7,7 @@ import org.junit.Test;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import esadrcanfer.us.alumno.autotesting.TestCase;
-import esadrcanfer.us.alumno.autotesting.util.Writer;
+import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 import esadrcanfer.us.alumno.autotesting.algorithms.RandomSearch;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraph;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraphBuilder;
@@ -38,8 +38,8 @@ public class TextInputTest2 {
 
     @Test
     public void testWriteFile() {
-        Writer writer = new Writer();
-        Log.d("TFG",writer.getPath());
-        writer.write("Hello");
+        WriterUtil writerUtil = new WriterUtil();
+        Log.d("TFG", writerUtil.getPath());
+        writerUtil.write("Hello");
     }
 }

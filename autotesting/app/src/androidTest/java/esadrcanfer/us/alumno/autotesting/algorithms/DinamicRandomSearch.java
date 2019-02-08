@@ -17,6 +17,7 @@ import esadrcanfer.us.alumno.autotesting.inagraph.StartAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.ObjectiveFunction;
+import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 
 public class DinamicRandomSearch {
     long iterations;
@@ -39,11 +40,13 @@ public class DinamicRandomSearch {
         int i=0;
         List<Action> testCaseActions;
         List<Action> availableActions;
+        WriterUtil writerUtil;
         Action chosenAction;
         double currentBestEval = -100;
         double eval = -100;
         while(i<iterations){
             Log.d("TFG","Running iteration "+(i+1));
+            writerUtil = new WriterUtil();
             startApp(appPackage);
             testCaseActions = new ArrayList<>();
             availableActions = createAction(device);
@@ -54,6 +57,7 @@ public class DinamicRandomSearch {
                 chosenAction=availableActions.get((int)(Math.random()*availableActions.size()));
                 testCaseActions.add(chosenAction);
                 Log.d("TFG","Executing action: "+ chosenAction);
+                writerUtil.write(chosenAction.toString());
                 eval = evaluate(chosenAction, appPackage);
             }
             if(eval>currentBestEval){

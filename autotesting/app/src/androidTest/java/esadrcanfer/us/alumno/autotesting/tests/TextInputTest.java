@@ -4,9 +4,6 @@ import android.util.Log;
 
 import org.junit.Test;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import esadrcanfer.us.alumno.autotesting.TestCase;
@@ -16,7 +13,7 @@ import esadrcanfer.us.alumno.autotesting.inagraph.INAGraph;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraphBuilder;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.ApplicationCrashObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.ObjectiveFunction;
-import esadrcanfer.us.alumno.autotesting.util.Writer;
+import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
@@ -54,11 +51,11 @@ public class TextInputTest {
 
     @Test
     public void testCloseApp() {
-        Writer writer = new Writer();
-        writer.write("Hola");
-        writer.write("¿Cómo estás?");
-        writer.write("Adiós");
-        Log.d("TFG",writer.getPath());
+        WriterUtil writerUtil = new WriterUtil();
+        writerUtil.write("Hola");
+        writerUtil.write("¿Cómo estás?");
+        writerUtil.write("Adiós");
+        Log.d("TFG", writerUtil.getPath());
     }
 
 }

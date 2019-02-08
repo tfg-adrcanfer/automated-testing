@@ -57,7 +57,7 @@ public class RandomSearch {
         List<Action> testActions=new ArrayList<>();
         List<Action> candidateActions=null;
         Action chosenAction=null;
-        //Writer writer = new Writer();
+        //WriterUtil writer = new WriterUtil();
         //Log.d("TFG", "TestCase File: " + writer.getPath());
         while(testActions.size()<actionsLength && graph.getAvailableActions().size() > 0){
             candidateActions=graph.getAvailableActions();

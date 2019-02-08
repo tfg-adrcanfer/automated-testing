@@ -1,20 +1,25 @@
 package esadrcanfer.us.alumno.autotesting.util;
 
+import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class Writer {
+public class WriterUtil {
 	private File logFile;
 	
-	public Writer() {
+	public WriterUtil() {
 		String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-		this.logFile = new File("/src/test/resources/TestCase " + timeLog);
+		String filename = "TestCase-" + timeLog+".txt";
+		this.logFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), filename);
 	}
 	
 	public File getLogFile() {
@@ -22,23 +27,19 @@ public class Writer {
 	}
 	
 	public void write(String text) {
-		BufferedWriter writer = null; 
 		try {
-			writer = new BufferedWriter(new FileWriter(getLogFile(), true));
-            writer.append(text);
-            writer.newLine();
-		} catch (IOException e) {
-		    Log.d("TFG", "Se ha producido una excepción al escribir en el fichero");
+			FileOutputStream fos = new FileOutputStream(getLogFile(), true);
+			fos.write(text.getBytes());
+
+			fos.close();
+			Log.d("TFG", "Saved!");
+
+		} catch (FileNotFoundException e){
 			e.printStackTrace();
-		} finally {
-			try {
-			    if(writer!= null){
-                    writer.close();
-                }
-			} catch (IOException e) {
-                Log.d("TFG", "Se ha producido una excepción al cerrar el fichero");
-				e.printStackTrace();
-			}
+			Log.d("TFG", "File not found!");
+		} catch (IOException e){
+			e.printStackTrace();
+			Log.d("TFG", "Error saving!");
 		}
 	}
 	
