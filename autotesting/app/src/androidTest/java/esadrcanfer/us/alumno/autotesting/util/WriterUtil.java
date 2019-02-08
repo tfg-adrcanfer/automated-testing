@@ -28,9 +28,9 @@ public class WriterUtil {
 	
 	public void write(String text) {
 		try {
-			FileOutputStream fos = new FileOutputStream(getLogFile(), true);
-			fos.write(text.getBytes());
-
+			FileWriter fos = new FileWriter(getLogFile(), true);
+			fos.write(text.toString());
+			fos.append("\n");
 			fos.close();
 			Log.d("TFG", "Saved!");
 

@@ -47,6 +47,7 @@ public class DinamicRandomSearch {
         while(i<iterations){
             Log.d("TFG","Running iteration "+(i+1));
             writerUtil = new WriterUtil();
+            writerUtil.write(appPackage);
             startApp(appPackage);
             testCaseActions = new ArrayList<>();
             availableActions = createAction(device);
