@@ -26,7 +26,7 @@ public class ReadTestCase {
         Log.d("TFG","Runnig it...");
         testCase.executeBefore();
         testCase.executeTest();
-        //testCase.executeAfter();
+        testCase.executeAfter();
         Log.d("TFG","Done!");
     }
 
@@ -39,7 +39,7 @@ public class ReadTestCase {
         Log.d("TFG","Runnig it...");
         testCase.executeBefore();
         testCase.executeTest();
-        //testCase.executeAfter();
+        testCase.executeAfter();
         Log.d("TFG","Done!");
     }
 }
