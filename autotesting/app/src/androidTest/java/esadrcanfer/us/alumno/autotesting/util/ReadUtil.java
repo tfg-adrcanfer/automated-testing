@@ -21,6 +21,9 @@ import esadrcanfer.us.alumno.autotesting.inagraph.CloseAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.StartAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.ButtonAction;
+import esadrcanfer.us.alumno.autotesting.inagraph.actions.CheckBoxAction;
+import esadrcanfer.us.alumno.autotesting.inagraph.actions.RadioButtonAction;
+import esadrcanfer.us.alumno.autotesting.inagraph.actions.RadioButtonInputGenerator;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.TextInputAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.TextInputGenerator;
 
@@ -85,8 +88,15 @@ public class ReadUtil {
                 res = new ButtonAction(object);
                 break;
             case "TEXT":
-                TextInputGenerator generator = new TextInputGenerator();
-                res = new TextInputAction(object, generator);
+                TextInputGenerator textInputGenerator = new TextInputGenerator();
+                res = new TextInputAction(object, textInputGenerator);
+                break;
+            case "CHECKBOX":
+                res = new CheckBoxAction(object);
+                break;
+            case "RADIO_BUTTON":
+                RadioButtonInputGenerator radioButtonInputGenerator = new RadioButtonInputGenerator();
+                res = new RadioButtonAction(object, radioButtonInputGenerator);
         }
         return res;
     }
