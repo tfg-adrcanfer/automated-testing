@@ -12,6 +12,8 @@ import esadrcanfer.us.alumno.autotesting.algorithms.RandomSearch;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraph;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraphBuilder;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.ApplicationCrashObjectiveFunction;
+import esadrcanfer.us.alumno.autotesting.objectivefunctions.DynamicApplicationCrashObjectiveFunction;
+import esadrcanfer.us.alumno.autotesting.objectivefunctions.DynamicTestExecutionTimeObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.ObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 
@@ -39,7 +41,22 @@ public class TextInputTest {
     @Test
     public void testDynamicRandomSearch() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
-        DynamicRandomSearch algorithm=new DynamicRandomSearch(10,2, appPackageName, true);
+        DynamicApplicationCrashObjectiveFunction objective = new DynamicApplicationCrashObjectiveFunction();
+        DynamicRandomSearch algorithm=new DynamicRandomSearch(objective, 10,2, appPackageName, false);
+        TestCase testCase=algorithm.run(mDevice, appPackageName);
+        Log.d("TFG","Test case found: "+testCase);
+        Log.d("TFG","Runnig it...");
+        testCase.executeBefore();
+        testCase.executeTest();
+        testCase.executeAfter();
+        Log.d("TFG","Done!");
+    }
+
+    @Test
+    public void testDynamicRandomSearchMaxTime() throws UiObjectNotFoundException {
+        UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
+        DynamicTestExecutionTimeObjectiveFunction objective = new DynamicTestExecutionTimeObjectiveFunction();
+        DynamicRandomSearch algorithm=new DynamicRandomSearch(objective, 10,2, appPackageName, false);
         TestCase testCase=algorithm.run(mDevice, appPackageName);
         Log.d("TFG","Test case found: "+testCase);
         Log.d("TFG","Runnig it...");

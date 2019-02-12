@@ -4,7 +4,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -17,10 +16,11 @@ import esadrcanfer.us.alumno.autotesting.inagraph.CloseAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.StartAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.ObjectiveFunction;
+import esadrcanfer.us.alumno.autotesting.objectivefunctions.DynamicObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 
 public class DynamicRandomSearch {
+    DynamicObjectiveFunction objective;
     long iterations;
     long actionsLength;
     List<Action> beforeActions;
@@ -28,7 +28,8 @@ public class DynamicRandomSearch {
     List<Action> testActions;
     Boolean saveAllTestCases;
 
-    public DynamicRandomSearch(long iterations, int actionsLength, String appPackage, Boolean saveAllTestCases) {
+    public DynamicRandomSearch(DynamicObjectiveFunction objective, long iterations, int actionsLength, String appPackage, Boolean saveAllTestCases) {
+        this.objective = objective;
         this.iterations = iterations;
         this.actionsLength=actionsLength;
         this.saveAllTestCases = saveAllTestCases;
@@ -46,12 +47,13 @@ public class DynamicRandomSearch {
         WriterUtil writerUtil = null;
         Action chosenAction;
         double currentBestEval = -100;
-        double eval = -100;
+        double eval;
         while(i<iterations){
             Log.d("TFG","Running iteration "+(i+1));
             Random chosenSeed = new Random();
             Long seed = chosenSeed.nextLong();
             Random random = new Random(seed);
+            eval = 0;
             if(saveAllTestCases){
                 writerUtil = new WriterUtil();
                 writerUtil.write(appPackage);
@@ -71,8 +73,9 @@ public class DynamicRandomSearch {
                 if(saveAllTestCases){
                     writerUtil.write(chosenAction.toString());
                 }
-                eval = evaluate(chosenAction, appPackage);
+                eval += objective.evaluate(chosenAction, appPackage);
             }
+            Log.d("TFG", "Eval: " + eval);
             if(eval>currentBestEval){
                 currentBestEval=eval;
                 testActions = new ArrayList<>();
@@ -120,20 +123,6 @@ public class DynamicRandomSearch {
         for (int i = 0; i < actions.size() && result; i++)
             result = (result && availableActions.contains(actions.get(i)));
         result = (result && availableActions.size() == (actions.size()));
-        return result;
-    }
-
-    public double evaluate(Action action, String appPackage) {
-        double result=0;
-        try {
-            UiDevice device = UiDevice.getInstance();
-            String packageName = device.getCurrentPackageName();
-            action.perform();
-            if(!packageName.equals(device.getCurrentPackageName())){
-                result = 1;
-            }
-        }catch(Exception e){
-        }
         return result;
     }
 }

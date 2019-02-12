@@ -21,6 +21,7 @@ import esadrcanfer.us.alumno.autotesting.inagraph.actions.ElementIdentifier;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.RadioButtonAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.RadioButtonInputGenerator;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.ApplicationCrashObjectiveFunction;
+import esadrcanfer.us.alumno.autotesting.objectivefunctions.DynamicApplicationCrashObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.ObjectiveFunction;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -48,7 +49,8 @@ public class RadioCheckTest {
     @Test
     public void testDynamicRandomSearch() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
-        DynamicRandomSearch algorithm=new DynamicRandomSearch(10,3, appPackage, false);
+        DynamicApplicationCrashObjectiveFunction objective = new DynamicApplicationCrashObjectiveFunction();
+        DynamicRandomSearch algorithm=new DynamicRandomSearch(objective,10,3, appPackage, false);
         TestCase testCase=algorithm.run(mDevice, appPackage);
         Log.d("TFG","Test case found: "+testCase);
         Log.d("TFG","Runnig it...");
