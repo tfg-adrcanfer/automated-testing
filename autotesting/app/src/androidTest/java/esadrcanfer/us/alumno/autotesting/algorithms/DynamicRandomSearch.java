@@ -25,10 +25,12 @@ public class DynamicRandomSearch {
     List<Action> beforeActions;
     List<Action> afterActions;
     List<Action> testActions;
+    Boolean saveAllTestCases;
 
-    public DynamicRandomSearch(long iterations, int actionsLength, String appPackage) {
+    public DynamicRandomSearch(long iterations, int actionsLength, String appPackage, Boolean saveAllTestCases) {
         this.iterations = iterations;
         this.actionsLength=actionsLength;
+        this.saveAllTestCases = saveAllTestCases;
         beforeActions=new ArrayList<>();
         beforeActions.add(new StartAppAction(appPackage));
         afterActions=new ArrayList<>();
@@ -40,14 +42,16 @@ public class DynamicRandomSearch {
         int i=0;
         List<Action> testCaseActions;
         List<Action> availableActions;
-        WriterUtil writerUtil;
+        WriterUtil writerUtil = null;
         Action chosenAction;
         double currentBestEval = -100;
         double eval = -100;
         while(i<iterations){
             Log.d("TFG","Running iteration "+(i+1));
-            writerUtil = new WriterUtil();
-            writerUtil.write(appPackage);
+            if(saveAllTestCases){
+                writerUtil = new WriterUtil();
+                writerUtil.write(appPackage);
+            }
             startApp(appPackage);
             testCaseActions = new ArrayList<>();
             availableActions = createAction(device);
@@ -58,7 +62,9 @@ public class DynamicRandomSearch {
                 chosenAction=availableActions.get((int)(Math.random()*availableActions.size()));
                 testCaseActions.add(chosenAction);
                 Log.d("TFG","Executing action: "+ chosenAction);
-                writerUtil.write(chosenAction.toString());
+                if(saveAllTestCases){
+                    writerUtil.write(chosenAction.toString());
+                }
                 eval = evaluate(chosenAction, appPackage);
             }
             if(eval>currentBestEval){
@@ -68,6 +74,15 @@ public class DynamicRandomSearch {
             }
             closeApp(appPackage);
             i++;
+        }
+
+
+        if(!saveAllTestCases){
+            writerUtil = new WriterUtil();
+            writerUtil.write(appPackage);
+            for(Action a: testActions){
+                writerUtil.write(a.toString());
+            }
         }
         return new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions);
     }

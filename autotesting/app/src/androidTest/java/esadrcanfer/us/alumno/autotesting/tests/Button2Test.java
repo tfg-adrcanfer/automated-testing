@@ -39,7 +39,7 @@ public class Button2Test {
     @Test
     public void testDinamicRandomSearch() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
-        DynamicRandomSearch algorithm=new DynamicRandomSearch(10,2, appPackageName);
+        DynamicRandomSearch algorithm=new DynamicRandomSearch(10,2, appPackageName, false);
         TestCase testCase=algorithm.run(mDevice, appPackageName);
         Log.d("TFG","Test case found: "+testCase);
         Log.d("TFG","Runnig it...");
