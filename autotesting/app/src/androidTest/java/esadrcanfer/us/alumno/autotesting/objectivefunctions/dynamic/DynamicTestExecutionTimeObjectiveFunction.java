@@ -1,4 +1,4 @@
-package esadrcanfer.us.alumno.autotesting.objectivefunctions;
+package esadrcanfer.us.alumno.autotesting.objectivefunctions.dynamic;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
 
 public class DynamicTestExecutionTimeObjectiveFunction implements DynamicObjectiveFunction {

@@ -1,4 +1,4 @@
-package esadrcanfer.us.alumno.autotesting.objectivefunctions;
+package esadrcanfer.us.alumno.autotesting.objectivefunctions.graph;
 
 import esadrcanfer.us.alumno.autotesting.TestCase;
 

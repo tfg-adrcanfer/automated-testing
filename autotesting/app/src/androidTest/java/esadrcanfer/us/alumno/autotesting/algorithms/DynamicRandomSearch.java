@@ -16,7 +16,7 @@ import esadrcanfer.us.alumno.autotesting.inagraph.CloseAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.StartAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.DynamicObjectiveFunction;
+import esadrcanfer.us.alumno.autotesting.objectivefunctions.dynamic.DynamicObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 
 public class DynamicRandomSearch {

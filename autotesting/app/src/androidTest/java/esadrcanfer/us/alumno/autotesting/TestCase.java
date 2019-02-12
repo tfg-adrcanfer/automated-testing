@@ -1,5 +1,6 @@
 package esadrcanfer.us.alumno.autotesting;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -66,6 +67,22 @@ public class TestCase {
         for(Action a:testActions)
             builder.append(a.toString());
         return builder.toString();
+    }
+
+    public List<Action> getTestActions(){
+        return new ArrayList<>(testActions);
+    }
+
+    public double compareTestCase (TestCase testCase){
+        double res = 0;
+        for(Action a: this.testActions){
+            for(Action a2: testCase.testActions){
+                if(a.toString().compareTo(a2.toString()) != 0){
+                    res++;
+                }
+            }
+        }
+        return res;
     }
 
 }

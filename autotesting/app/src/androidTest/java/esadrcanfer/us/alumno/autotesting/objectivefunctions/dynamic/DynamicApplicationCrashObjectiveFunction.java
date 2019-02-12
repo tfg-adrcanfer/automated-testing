@@ -1,4 +1,4 @@
-package esadrcanfer.us.alumno.autotesting.objectivefunctions;
+package esadrcanfer.us.alumno.autotesting.objectivefunctions.dynamic;
 
 
 import androidx.test.uiautomator.UiDevice;

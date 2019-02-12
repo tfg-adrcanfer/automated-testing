@@ -9,7 +9,6 @@ import net.sf.extjwnl.data.IndexWord;
 import net.sf.extjwnl.data.POS;
 import net.sf.extjwnl.dictionary.Dictionary;
 
-
 public class DictionaryBasedValueGenerator {
     public static final int DEFAULT_NUMBER_OF_WORDS=3;
     public static final String[] IGNORED_WORDS= {"is","of","and","where","this","that"};

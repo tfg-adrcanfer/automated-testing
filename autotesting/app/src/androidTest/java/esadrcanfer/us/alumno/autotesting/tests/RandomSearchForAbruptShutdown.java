@@ -8,8 +8,8 @@ import esadrcanfer.us.alumno.autotesting.TestCase;
 import esadrcanfer.us.alumno.autotesting.algorithms.RandomSearch;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraph;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraphBuilder;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.ApplicationCrashObjectiveFunction;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.ObjectiveFunction;
+import esadrcanfer.us.alumno.autotesting.objectivefunctions.graph.ApplicationCrashObjectiveFunction;
+import esadrcanfer.us.alumno.autotesting.objectivefunctions.graph.ObjectiveFunction;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 

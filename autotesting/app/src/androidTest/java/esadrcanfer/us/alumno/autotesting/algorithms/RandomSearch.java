@@ -12,7 +12,7 @@ import esadrcanfer.us.alumno.autotesting.inagraph.CloseAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraph;
 import esadrcanfer.us.alumno.autotesting.inagraph.StartAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.ObjectiveFunction;
+import esadrcanfer.us.alumno.autotesting.objectivefunctions.graph.ObjectiveFunction;
 
 public class RandomSearch {
 

@@ -11,6 +11,7 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import esadrcanfer.us.alumno.autotesting.TestCase;
+import esadrcanfer.us.alumno.autotesting.algorithms.DiversityRandomSearch;
 import esadrcanfer.us.alumno.autotesting.algorithms.DynamicRandomSearch;
 import esadrcanfer.us.alumno.autotesting.algorithms.RandomSearch;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraph;
@@ -20,9 +21,9 @@ import esadrcanfer.us.alumno.autotesting.inagraph.actions.CheckBoxAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.ElementIdentifier;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.RadioButtonAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.RadioButtonInputGenerator;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.ApplicationCrashObjectiveFunction;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.DynamicApplicationCrashObjectiveFunction;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.ObjectiveFunction;
+import esadrcanfer.us.alumno.autotesting.objectivefunctions.graph.ApplicationCrashObjectiveFunction;
+import esadrcanfer.us.alumno.autotesting.objectivefunctions.dynamic.DynamicApplicationCrashObjectiveFunction;
+import esadrcanfer.us.alumno.autotesting.objectivefunctions.graph.ObjectiveFunction;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
@@ -58,6 +59,14 @@ public class RadioCheckTest {
         testCase.executeTest();
         testCase.executeAfter();
         Log.d("TFG","Done!");
+    }
+
+    @Test
+    public void testDiversityRandomSearch() throws UiObjectNotFoundException {
+        UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
+        DiversityRandomSearch algorithm=new DiversityRandomSearch(10, 2,2, appPackage, false);
+        List<TestCase> testCases=algorithm.run(mDevice, appPackage);
+        Log.d("TFG","Test cases founded: " + testCases.size());
     }
 
     @Test
