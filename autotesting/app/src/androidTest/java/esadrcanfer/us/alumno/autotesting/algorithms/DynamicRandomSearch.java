@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
@@ -48,16 +49,21 @@ public class DynamicRandomSearch {
         double eval = -100;
         while(i<iterations){
             Log.d("TFG","Running iteration "+(i+1));
+            Random chosenSeed = new Random();
+            Long seed = chosenSeed.nextLong();
+            Random random = new Random(seed);
             if(saveAllTestCases){
                 writerUtil = new WriterUtil();
                 writerUtil.write(appPackage);
+                writerUtil.write(seed.toString());
             }
             startApp(appPackage);
             testCaseActions = new ArrayList<>();
-            availableActions = createAction(device);
+            availableActions = createAction(device, random);
             while(testCaseActions.size()<actionsLength && availableActions.size() > 0){
-                if(!isSameNode(device, availableActions)){
-                    availableActions = createAction(device);
+                //Puede que aquí no sea conveniente pasar el random global
+                if(!isSameNode(device, availableActions, new Random())){
+                    availableActions = createAction(device, random);
                 }
                 chosenAction=availableActions.get((int)(Math.random()*availableActions.size()));
                 testCaseActions.add(chosenAction);
@@ -87,9 +93,9 @@ public class DynamicRandomSearch {
         return new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions);
     }
 
-    private List<Action> createAction(UiDevice device) {
+    private List<Action> createAction(UiDevice device, Random random) {
         Map<UiObject, Action> actions;
-        actions = ActionFactory.createActions(device);
+        actions = ActionFactory.createActions(device, random);
         return new ArrayList<>(actions.values());
     }
 
@@ -108,9 +114,9 @@ public class DynamicRandomSearch {
         }
     }
 
-    public boolean isSameNode(UiDevice device, List<Action> availableActions) {
+    public boolean isSameNode(UiDevice device, List<Action> availableActions, Random random) {
         boolean result = true;
-        List<Action> actions = new ArrayList<>(ActionFactory.createActions(device).values());
+        List<Action> actions = new ArrayList<>(ActionFactory.createActions(device, random).values());
         for (int i = 0; i < actions.size() && result; i++)
             result = (result && availableActions.contains(actions.get(i)));
         result = (result && availableActions.size() == (actions.size()));

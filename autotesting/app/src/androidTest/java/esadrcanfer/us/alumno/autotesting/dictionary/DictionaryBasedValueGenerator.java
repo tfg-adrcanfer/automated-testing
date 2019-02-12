@@ -12,7 +12,6 @@ import net.sf.extjwnl.dictionary.Dictionary;
 
 public class DictionaryBasedValueGenerator implements ParameterValueGenerator, RandomizedGenerator{
     public static final int DEFAULT_NUMBER_OF_WORDS=3;
-    
     public static final String[] IGNORED_WORDS= {"is","of","and","where","this","that"};
     
    
@@ -22,21 +21,21 @@ public class DictionaryBasedValueGenerator implements ParameterValueGenerator, R
     protected int minWords;
     protected Random randomGenerator;
     
-    
 
     public DictionaryBasedValueGenerator()
     {
-        this(DEFAULT_NUMBER_OF_WORDS,DEFAULT_NUMBER_OF_WORDS);
+        this(DEFAULT_NUMBER_OF_WORDS,DEFAULT_NUMBER_OF_WORDS, new Random());
     }
-    public DictionaryBasedValueGenerator(int words) {
-        this(words,words);
+    public DictionaryBasedValueGenerator(int words, Random random) {
+        this(words,words, random);
     }    
     
     
     
-    public DictionaryBasedValueGenerator(int minWords,int maxWords) {
+    public DictionaryBasedValueGenerator(int minWords,int maxWords, Random random) {
         this.minWords=minWords;
-        this.maxWords = maxWords;        
+        this.maxWords = maxWords;
+        this.randomGenerator = random;
         
     }
 
@@ -97,12 +96,10 @@ public class DictionaryBasedValueGenerator implements ParameterValueGenerator, R
         return result;
     }
 
-    //@Override
     public Random getRandomGenerator() {
         return randomGenerator;
     }
 
-    //@Override
     public void setRandomGenerator(Random randomGenerator) {
         this.randomGenerator = randomGenerator;
     }

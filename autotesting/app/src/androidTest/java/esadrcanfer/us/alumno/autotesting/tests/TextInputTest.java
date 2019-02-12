@@ -39,7 +39,7 @@ public class TextInputTest {
     @Test
     public void testDynamicRandomSearch() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
-        DynamicRandomSearch algorithm=new DynamicRandomSearch(10,2, appPackageName, false);
+        DynamicRandomSearch algorithm=new DynamicRandomSearch(10,2, appPackageName, true);
         TestCase testCase=algorithm.run(mDevice, appPackageName);
         Log.d("TFG","Test case found: "+testCase);
         Log.d("TFG","Runnig it...");

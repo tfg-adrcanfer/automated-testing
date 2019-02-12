@@ -5,6 +5,7 @@ import android.util.Log;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Random;
 
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
@@ -62,7 +63,7 @@ public class RadioCheckTest {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
         List<UiObject> radioButtons = ElementIdentifier.findElements(mDevice, "android.widget.RadioGroup");
         for (UiObject radioButton: radioButtons){
-            RadioButtonInputGenerator radioButtonInputGenerator = new RadioButtonInputGenerator();
+            RadioButtonInputGenerator radioButtonInputGenerator = new RadioButtonInputGenerator(new Random());
             RadioButtonAction radioButtonAction = new RadioButtonAction(radioButton,radioButtonInputGenerator);
             radioButtonAction.perform();
         }

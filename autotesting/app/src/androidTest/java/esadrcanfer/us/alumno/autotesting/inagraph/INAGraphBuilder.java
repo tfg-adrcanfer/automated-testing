@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
@@ -54,7 +55,7 @@ public class INAGraphBuilder {
     }
 
     public void createActions(Node node, UiDevice device) {
-        Map<UiObject, Action> actions = ActionFactory.createActions(device);
+        Map<UiObject, Action> actions = ActionFactory.createActions(device,  new Random());
         node.getControls().addAll(actions.keySet());
         node.getAvailableActions().addAll(actions.values());
     }
@@ -89,7 +90,7 @@ public class INAGraphBuilder {
 
     public boolean isSameNode(Node currentNode, UiDevice device) throws UiObjectNotFoundException {
         boolean result = true;
-        List<Action> actions = new ArrayList<>(ActionFactory.createActions(device).values());
+        List<Action> actions = new ArrayList<>(ActionFactory.createActions(device, new Random()).values());
         for (int i = 0; i < actions.size() && result; i++)
             result = (result && currentNode.getAvailableActions().contains(actions.get(i)));
         result = (result && currentNode.getAvailableActions().size() == (actions.size()));

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiSelector;
@@ -65,10 +66,12 @@ public class ReadUtil {
         String text = readText();
         String[] lines = text.split("\n");
         String appPackage = lines[0];
+        Long seed = new Long(lines[1]);
+        Random random = new Random(seed);
         String action = "";
-        for(int i = 1; i< lines.length; i++){
+        for(int i = 2; i< lines.length; i++){
             action = lines[i];
-            testActions.add(generateActionFromString(action));
+            testActions.add(generateActionFromString(action, random));
         }
         beforeActions.add(new StartAppAction(appPackage));
         afterActions.add(new CloseAppAction(appPackage));
@@ -76,7 +79,7 @@ public class ReadUtil {
         return new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions);
     }
 
-    private Action generateActionFromString(String action){
+    private Action generateActionFromString(String action, Random random){
         String[] splitAction = action.split(",");
         String type = splitAction[0];
         String resourceId = splitAction[1];
@@ -88,14 +91,14 @@ public class ReadUtil {
                 res = new ButtonAction(object);
                 break;
             case "TEXT":
-                TextInputGenerator textInputGenerator = new TextInputGenerator();
+                TextInputGenerator textInputGenerator = new TextInputGenerator(random);
                 res = new TextInputAction(object, textInputGenerator);
                 break;
             case "CHECKBOX":
                 res = new CheckBoxAction(object);
                 break;
             case "RADIO_BUTTON":
-                RadioButtonInputGenerator radioButtonInputGenerator = new RadioButtonInputGenerator();
+                RadioButtonInputGenerator radioButtonInputGenerator = new RadioButtonInputGenerator(random);
                 res = new RadioButtonAction(object, radioButtonInputGenerator);
         }
         return res;
