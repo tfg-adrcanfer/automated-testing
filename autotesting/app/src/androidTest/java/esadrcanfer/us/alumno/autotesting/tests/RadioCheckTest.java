@@ -50,7 +50,7 @@ public class RadioCheckTest {
     public void testDynamicRandomSearch() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
         DynamicApplicationCrashObjectiveFunction objective = new DynamicApplicationCrashObjectiveFunction();
-        DynamicRandomSearch algorithm=new DynamicRandomSearch(objective,10,3, appPackage, false);
+        DynamicRandomSearch algorithm=new DynamicRandomSearch(objective,5,3, appPackage, true);
         TestCase testCase=algorithm.run(mDevice, appPackage);
         Log.d("TFG","Test case found: "+testCase);
         Log.d("TFG","Runnig it...");
