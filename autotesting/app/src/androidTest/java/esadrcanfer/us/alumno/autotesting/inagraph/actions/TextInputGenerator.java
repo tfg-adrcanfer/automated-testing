@@ -7,7 +7,7 @@ public class TextInputGenerator extends InputGenerator {
 
     public void generateInput(UiObject object) {
         try {
-            DictionaryBasedValueGenerator dictionary = new DictionaryBasedValueGenerator(1,1);
+            DictionaryBasedValueGenerator dictionary = new DictionaryBasedValueGenerator(1);
             object.setText(dictionary.generate().toString());
         } catch (Exception e) {
             e.printStackTrace();

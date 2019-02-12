@@ -33,7 +33,7 @@ public class ReadTestCase {
     @Test
     public void read2() throws UiObjectNotFoundException {
         UiDevice.getInstance(getInstrumentation());
-        ReadUtil readUtil = new ReadUtil("TestCase-20190209_125318.txt");
+        ReadUtil readUtil = new ReadUtil("TestCase-20190212_112002.txt");
         TestCase testCase = readUtil.generateTestCase();
         Log.d("TFG","Test case found: "+testCase);
         Log.d("TFG","Runnig it...");

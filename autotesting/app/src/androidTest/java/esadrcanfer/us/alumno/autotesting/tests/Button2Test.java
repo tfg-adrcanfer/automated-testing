@@ -7,7 +7,7 @@ import org.junit.Test;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import esadrcanfer.us.alumno.autotesting.TestCase;
-import esadrcanfer.us.alumno.autotesting.algorithms.DinamicRandomSearch;
+import esadrcanfer.us.alumno.autotesting.algorithms.DynamicRandomSearch;
 import esadrcanfer.us.alumno.autotesting.algorithms.RandomSearch;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraph;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraphBuilder;
@@ -39,7 +39,7 @@ public class Button2Test {
     @Test
     public void testDinamicRandomSearch() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
-        DinamicRandomSearch algorithm=new DinamicRandomSearch(10,2, appPackageName);
+        DynamicRandomSearch algorithm=new DynamicRandomSearch(10,2, appPackageName);
         TestCase testCase=algorithm.run(mDevice, appPackageName);
         Log.d("TFG","Test case found: "+testCase);
         Log.d("TFG","Runnig it...");

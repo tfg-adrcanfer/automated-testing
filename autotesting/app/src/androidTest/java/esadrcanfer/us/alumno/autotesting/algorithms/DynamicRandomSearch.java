@@ -19,14 +19,14 @@ import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.ObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 
-public class DinamicRandomSearch {
+public class DynamicRandomSearch {
     long iterations;
     long actionsLength;
     List<Action> beforeActions;
     List<Action> afterActions;
     List<Action> testActions;
 
-    public DinamicRandomSearch(long iterations, int actionsLength, String appPackage) {
+    public DynamicRandomSearch(long iterations, int actionsLength, String appPackage) {
         this.iterations = iterations;
         this.actionsLength=actionsLength;
         beforeActions=new ArrayList<>();

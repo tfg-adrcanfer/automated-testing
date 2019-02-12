@@ -10,11 +10,10 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import esadrcanfer.us.alumno.autotesting.TestCase;
-import esadrcanfer.us.alumno.autotesting.algorithms.DinamicRandomSearch;
+import esadrcanfer.us.alumno.autotesting.algorithms.DynamicRandomSearch;
 import esadrcanfer.us.alumno.autotesting.algorithms.RandomSearch;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraph;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraphBuilder;
-import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.ButtonAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.CheckBoxAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.ElementIdentifier;
@@ -46,9 +45,9 @@ public class RadioCheckTest {
     }
 
     @Test
-    public void testDinamicRandomSearch() throws UiObjectNotFoundException {
+    public void testDynamicRandomSearch() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
-        DinamicRandomSearch algorithm=new DinamicRandomSearch(10,3, appPackage);
+        DynamicRandomSearch algorithm=new DynamicRandomSearch(10,3, appPackage);
         TestCase testCase=algorithm.run(mDevice, appPackage);
         Log.d("TFG","Test case found: "+testCase);
         Log.d("TFG","Runnig it...");
