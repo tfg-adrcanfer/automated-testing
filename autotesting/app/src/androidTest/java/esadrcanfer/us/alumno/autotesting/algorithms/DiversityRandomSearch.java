@@ -2,8 +2,6 @@ package esadrcanfer.us.alumno.autotesting.algorithms;
 
 import android.util.Log;
 
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,7 +17,7 @@ import esadrcanfer.us.alumno.autotesting.inagraph.CloseAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.StartAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.dynamic.DynamicObjectiveFunction;
+import esadrcanfer.us.alumno.autotesting.util.Tuple;
 import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 
 import static android.os.SystemClock.sleep;
@@ -30,7 +28,7 @@ public class DiversityRandomSearch {
     long diversityLength;
     List<Action> beforeActions;
     List<Action> afterActions;
-    List<TestCase> testCases;
+    Map<TestCase, Long> testCases;
     Boolean saveAllTestCases;
     double diferentActions;
 
@@ -44,44 +42,43 @@ public class DiversityRandomSearch {
         beforeActions.add(new StartAppAction(appPackage));
         afterActions = new ArrayList<>();
         afterActions.add(new CloseAppAction(appPackage));
-        testCases = new ArrayList<>();
+        testCases = new HashMap<>();
     }
 
     public List<TestCase> run(UiDevice device, String appPackage) throws UiObjectNotFoundException {
         int i = 0;
-        TestCase testCase;
+        Tuple<TestCase, Long> testCaseSeedPair;
         while (i < iterations) {
             Log.d("TFG", "Running iteration " + (i + 1));
-            testCase = buildTestCase(device, appPackage);
+            testCaseSeedPair = buildTestCase(device, appPackage);
             if (i < diversityLength) {
-                testCases.add(testCase);
+                testCases.put(testCaseSeedPair.getKey(), testCaseSeedPair.getValue());
             } else {
-                testCases = new ArrayList<>(diversityMeasure(testCase));
-                diferentActions = evaluateDiversityTestCases(testCases);
+                testCases = diversityMeasure(testCaseSeedPair);
+                diferentActions = evaluateDiversityTestCases(new ArrayList<>(testCases.keySet()));
             }
             if (i == diversityLength - 1) {
-                diferentActions = evaluateDiversityTestCases(testCases);
+                diferentActions = evaluateDiversityTestCases(new ArrayList<>(testCases.keySet()));
             }
             Log.d("TFG", "Diferent actions iteration " + (i+1) +": " + diferentActions);
             i++;
         }
         if(!saveAllTestCases){
             WriterUtil writerUtil;
-            for (TestCase t: testCases){
+            for (Map.Entry<TestCase, Long> entry: testCases.entrySet()){
                 writerUtil = new WriterUtil();
                 writerUtil.write(appPackage);
-                writerUtil.write("-10000");
-                for(Action a: t.getTestActions()){
+                writerUtil.write(entry.getValue().toString());
+                for(Action a: entry.getKey().getTestActions()){
                     writerUtil.write(a.toString());
                 }
                 sleep(1000);
             }
         }
-
-        return testCases;
+        return new ArrayList<>(testCases.keySet());
     }
 
-    private TestCase buildTestCase(UiDevice device, String appPackage) throws UiObjectNotFoundException {
+    private Tuple<TestCase, Long> buildTestCase(UiDevice device, String appPackage) throws UiObjectNotFoundException {
         List<Action> testCaseActions;
         List<Action> availableActions;
         Random chosenSeed = new Random();
@@ -108,7 +105,7 @@ public class DiversityRandomSearch {
             availableActions = createAction(device, seeds.nextInt());
         }
         closeApp(appPackage);
-        return new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions);
+        return new Tuple<>(new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions), seed);
     }
 
     private List<Action> createAction(UiDevice device, Integer seed) {
@@ -132,27 +129,19 @@ public class DiversityRandomSearch {
         }
     }
 
-    public boolean isSameNode(UiDevice device, List<Action> availableActions, Random random) {
-        boolean result = true;
-        List<Action> actions = new ArrayList<>(ActionFactory.createActions(device, random.nextInt()).values());
-        for (int i = 0; i < actions.size() && result; i++)
-            result = (result && availableActions.contains(actions.get(i)));
-        result = (result && availableActions.size() == (actions.size()));
-        return result;
-    }
-
-    private List<TestCase> diversityMeasure(TestCase chosenTestCase) {
+    private Map<TestCase, Long> diversityMeasure(Tuple<TestCase, Long> chosenTestCase) {
         double currentEval = 0;
         double bestEval = diferentActions;
-        List<TestCase> currentTestCases;
-        List<TestCase> bestTestCases = new ArrayList<>(testCases);
-        for (int i = 0; i < testCases.size(); i++) {
-            currentTestCases = new ArrayList<>(testCases);
-            currentTestCases.set(i, chosenTestCase);
-            currentEval = evaluateDiversityTestCases(currentTestCases);
+        Map<TestCase, Long> currentTestCases = new HashMap<>(testCases);
+        Map<TestCase, Long> bestTestCases = new HashMap<>(testCases);
+        for (Map.Entry<TestCase, Long> entry: currentTestCases.entrySet()) {
+            currentTestCases = new HashMap<>(testCases);
+            currentTestCases.remove(entry.getKey());
+            currentTestCases.put(chosenTestCase.getKey(), chosenTestCase.getValue());
+            currentEval = evaluateDiversityTestCases(new ArrayList<>(currentTestCases.keySet()));
             if(currentEval > bestEval){
                 bestEval = currentEval;
-                bestTestCases = new ArrayList<>(currentTestCases);
+                bestTestCases = new HashMap<>(currentTestCases);
             }
         }
         return bestTestCases;

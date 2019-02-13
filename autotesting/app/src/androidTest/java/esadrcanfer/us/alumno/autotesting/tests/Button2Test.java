@@ -57,7 +57,7 @@ public class Button2Test {
     @Test
     public void testDiversityRandomSearch() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
-        DiversityRandomSearch algorithm=new DiversityRandomSearch(10, 2,4, appPackageName, true);
+        DiversityRandomSearch algorithm=new DiversityRandomSearch(10, 2,4, appPackageName, false);
         List<TestCase> testCases=algorithm.run(mDevice, appPackageName);
         Log.d("TFG","Test cases founded: " + testCases);
     }

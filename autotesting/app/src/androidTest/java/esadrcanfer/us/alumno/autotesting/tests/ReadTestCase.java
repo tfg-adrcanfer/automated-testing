@@ -20,7 +20,7 @@ public class ReadTestCase {
     @Test
     public void read() throws UiObjectNotFoundException {
         UiDevice.getInstance(getInstrumentation());
-        ReadUtil readUtil = new ReadUtil("TestCase-20190213_182110.txt", true);
+        ReadUtil readUtil = new ReadUtil("TestCase-20190213_212431.txt", true);
         TestCase testCase = readUtil.generateTestCase();
         Log.d("TFG","Test case found: "+testCase);
         Log.d("TFG","Runnig it...");

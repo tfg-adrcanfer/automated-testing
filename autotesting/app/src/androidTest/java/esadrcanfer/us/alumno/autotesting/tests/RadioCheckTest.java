@@ -64,7 +64,7 @@ public class RadioCheckTest {
     @Test
     public void testDiversityRandomSearch() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
-        DiversityRandomSearch algorithm=new DiversityRandomSearch(10, 2,2, appPackage, false);
+        DiversityRandomSearch algorithm=new DiversityRandomSearch(2, 2,2, appPackage, false);
         List<TestCase> testCases=algorithm.run(mDevice, appPackage);
         Log.d("TFG","Test cases founded: " + testCases.size());
     }
