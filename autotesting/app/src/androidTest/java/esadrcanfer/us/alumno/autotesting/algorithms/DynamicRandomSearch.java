@@ -46,13 +46,14 @@ public class DynamicRandomSearch {
         List<Action> availableActions;
         WriterUtil writerUtil = null;
         Action chosenAction;
+        Long selectedSeed=-1000l;
         double currentBestEval = -100;
         double eval;
         while(i<iterations){
             Log.d("TFG","Running iteration "+(i+1));
             Random chosenSeed = new Random();
             Long seed = chosenSeed.nextLong();
-            Random random = new Random(seed);
+            Random seeds = new Random(seed);
             eval = 0;
             if(saveAllTestCases){
                 writerUtil = new WriterUtil();
@@ -61,12 +62,8 @@ public class DynamicRandomSearch {
             }
             startApp(appPackage);
             testCaseActions = new ArrayList<>();
-            availableActions = createAction(device, random);
+            availableActions = createAction(device, seeds.nextInt());
             while(testCaseActions.size()<actionsLength && availableActions.size() > 0){
-                //Puede que aquí no sea conveniente pasar el random global
-                if(!isSameNode(device, availableActions, new Random())){
-                    availableActions = createAction(device, random);
-                }
                 chosenAction=availableActions.get((int)(Math.random()*availableActions.size()));
                 testCaseActions.add(chosenAction);
                 Log.d("TFG","Executing action: "+ chosenAction);
@@ -74,10 +71,12 @@ public class DynamicRandomSearch {
                     writerUtil.write(chosenAction.toString());
                 }
                 eval += objective.evaluate(chosenAction, appPackage);
+                availableActions = createAction(device, seeds.nextInt());
             }
             Log.d("TFG", "Eval: " + eval);
             if(eval>currentBestEval){
                 currentBestEval=eval;
+                selectedSeed = seed;
                 testActions = new ArrayList<>();
                 testActions.addAll(testCaseActions);
             }
@@ -89,6 +88,7 @@ public class DynamicRandomSearch {
         if(!saveAllTestCases){
             writerUtil = new WriterUtil();
             writerUtil.write(appPackage);
+            writerUtil.write(selectedSeed.toString());
             for(Action a: testActions){
                 writerUtil.write(a.toString());
             }
@@ -96,9 +96,9 @@ public class DynamicRandomSearch {
         return new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions);
     }
 
-    private List<Action> createAction(UiDevice device, Random random) {
+    private List<Action> createAction(UiDevice device, Integer seed) {
         Map<UiObject, Action> actions;
-        actions = ActionFactory.createActions(device, random);
+        actions = ActionFactory.createActions(device, seed);
         return new ArrayList<>(actions.values());
     }
 
@@ -117,12 +117,12 @@ public class DynamicRandomSearch {
         }
     }
 
-    public boolean isSameNode(UiDevice device, List<Action> availableActions, Random random) {
+    /**public boolean isSameNode(UiDevice device, List<Action> availableActions, Random random) {
         boolean result = true;
         List<Action> actions = new ArrayList<>(ActionFactory.createActions(device, random).values());
         for (int i = 0; i < actions.size() && result; i++)
             result = (result && availableActions.contains(actions.get(i)));
         result = (result && availableActions.size() == (actions.size()));
         return result;
-    }
+    }**/
 }

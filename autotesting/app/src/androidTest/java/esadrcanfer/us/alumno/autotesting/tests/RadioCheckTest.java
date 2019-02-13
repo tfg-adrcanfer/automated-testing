@@ -74,7 +74,7 @@ public class RadioCheckTest {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
         List<UiObject> radioButtons = ElementIdentifier.findElements(mDevice, "android.widget.RadioGroup");
         for (UiObject radioButton: radioButtons){
-            RadioButtonInputGenerator radioButtonInputGenerator = new RadioButtonInputGenerator(new Random());
+            RadioButtonInputGenerator radioButtonInputGenerator = new RadioButtonInputGenerator(new Random().nextInt());
             RadioButtonAction radioButtonAction = new RadioButtonAction(radioButton,radioButtonInputGenerator);
             radioButtonAction.perform();
         }

@@ -7,15 +7,15 @@ import esadrcanfer.us.alumno.autotesting.dictionary.DictionaryBasedValueGenerato
 
 public class TextInputGenerator extends InputGenerator {
 
-    Random random;
+    Integer seed;
 
-    public TextInputGenerator(Random random){
-        this.random = random;
+    public TextInputGenerator(Integer seed){
+        this.seed = seed;
     }
 
     public void generateInput(UiObject object) {
         try {
-            DictionaryBasedValueGenerator dictionary = new DictionaryBasedValueGenerator(1, random);
+            DictionaryBasedValueGenerator dictionary = new DictionaryBasedValueGenerator(1, seed);
             object.setText(dictionary.generate().toString());
         } catch (Exception e) {
             e.printStackTrace();

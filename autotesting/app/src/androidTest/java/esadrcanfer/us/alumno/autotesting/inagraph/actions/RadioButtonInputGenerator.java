@@ -10,13 +10,13 @@ import androidx.test.uiautomator.UiSelector;
 
 public class RadioButtonInputGenerator extends InputGenerator {
 
-    Random random;
-    public RadioButtonInputGenerator(Random random){
-        this.random = random;
+    Integer seed;
+    public RadioButtonInputGenerator(Integer seed){
+        this.seed = seed;
     }
 
     public void generateInput(UiObject target) throws UiObjectNotFoundException {
-        Integer selectedRadioButton = random.nextInt(target.getChildCount());
+        Integer selectedRadioButton = new Random(seed).nextInt(target.getChildCount());
         UiObject dataValue = target.getChild(new UiSelector().className(RadioButton.class.getName()).index(selectedRadioButton));
         dataValue.click();
     }

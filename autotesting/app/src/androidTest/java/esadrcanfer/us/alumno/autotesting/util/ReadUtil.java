@@ -71,7 +71,7 @@ public class ReadUtil {
         String action = "";
         for(int i = 2; i< lines.length; i++){
             action = lines[i];
-            testActions.add(generateActionFromString(action, random));
+            testActions.add(generateActionFromString(action, random.nextInt()));
         }
         beforeActions.add(new StartAppAction(appPackage));
         afterActions.add(new CloseAppAction(appPackage));
@@ -79,7 +79,7 @@ public class ReadUtil {
         return new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions);
     }
 
-    private Action generateActionFromString(String action, Random random){
+    private Action generateActionFromString(String action, Integer seed){
         String[] splitAction = action.split(",");
         String type = splitAction[0];
         String resourceId = splitAction[1];
@@ -91,14 +91,14 @@ public class ReadUtil {
                 res = new ButtonAction(object);
                 break;
             case "TEXT":
-                TextInputGenerator textInputGenerator = new TextInputGenerator(random);
+                TextInputGenerator textInputGenerator = new TextInputGenerator(seed);
                 res = new TextInputAction(object, textInputGenerator);
                 break;
             case "CHECKBOX":
                 res = new CheckBoxAction(object);
                 break;
             case "RADIO_BUTTON":
-                RadioButtonInputGenerator radioButtonInputGenerator = new RadioButtonInputGenerator(random);
+                RadioButtonInputGenerator radioButtonInputGenerator = new RadioButtonInputGenerator(seed);
                 res = new RadioButtonAction(object, radioButtonInputGenerator);
         }
         return res;

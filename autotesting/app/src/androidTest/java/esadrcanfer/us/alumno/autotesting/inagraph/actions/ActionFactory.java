@@ -1,5 +1,7 @@
 package esadrcanfer.us.alumno.autotesting.inagraph.actions;
 
+import android.util.Log;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +12,9 @@ import androidx.test.uiautomator.UiObject;
 
 public class ActionFactory {
 
-    public static Map<UiObject, Action> createInputActions(UiDevice device, Random random) {
-        TextInputGenerator generator = new TextInputGenerator(random);
+    public static Map<UiObject, Action> createInputActions(UiDevice device, Integer seed) {
+        Log.d("TFG", "Seed: " + seed);
+        TextInputGenerator generator = new TextInputGenerator(seed);
         List<UiObject> inputTexts = ElementIdentifier.findElements(device, "android.widget.EditText");
         Map<UiObject, Action> result = new HashMap<>();
         for (UiObject input : inputTexts) {
@@ -29,8 +32,8 @@ public class ActionFactory {
         return result;
     }
 
-    public static Map<UiObject, Action> createRadioActions(UiDevice device, Random random) {
-        RadioButtonInputGenerator generator = new RadioButtonInputGenerator(random);
+    public static Map<UiObject, Action> createRadioActions(UiDevice device, Integer seed) {
+        RadioButtonInputGenerator generator = new RadioButtonInputGenerator(seed);
         Map<UiObject, Action> result = new HashMap<>();
         List<UiObject> buttons = ElementIdentifier.findElements(device, "android.widget.RadioGroup");
         for (UiObject input : buttons) {
@@ -49,12 +52,12 @@ public class ActionFactory {
 
     }
 
-    public static Map<UiObject, Action> createActions(UiDevice device, Random random) {
+    public static Map<UiObject, Action> createActions(UiDevice device, Integer seed) {
         Map<UiObject, Action> actions = new HashMap<>();
         actions.putAll(ActionFactory.createButtonActions(device));
-        actions.putAll(ActionFactory.createInputActions(device, random));
+        actions.putAll(ActionFactory.createInputActions(device, seed));
         actions.putAll(ActionFactory.createCheckBoxActions(device));
-        actions.putAll(ActionFactory.createRadioActions(device, random));
+        actions.putAll(ActionFactory.createRadioActions(device, seed));
         return actions;
     }
 }

@@ -87,7 +87,7 @@ public class DiversityRandomSearch {
 
     private List<Action> createAction(UiDevice device, Random random) {
         Map<UiObject, Action> actions;
-        actions = ActionFactory.createActions(device, random);
+        actions = ActionFactory.createActions(device, random.nextInt());
         return new ArrayList<>(actions.values());
     }
 
@@ -108,7 +108,7 @@ public class DiversityRandomSearch {
 
     public boolean isSameNode(UiDevice device, List<Action> availableActions, Random random) {
         boolean result = true;
-        List<Action> actions = new ArrayList<>(ActionFactory.createActions(device, random).values());
+        List<Action> actions = new ArrayList<>(ActionFactory.createActions(device, random.nextInt()).values());
         for (int i = 0; i < actions.size() && result; i++)
             result = (result && availableActions.contains(actions.get(i)));
         result = (result && availableActions.size() == (actions.size()));
