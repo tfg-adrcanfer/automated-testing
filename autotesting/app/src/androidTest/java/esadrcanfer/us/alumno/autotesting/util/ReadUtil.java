@@ -30,9 +30,11 @@ import esadrcanfer.us.alumno.autotesting.inagraph.actions.TextInputGenerator;
 
 public class ReadUtil {
     String path;
+    Boolean sameSeed;
 
-    public ReadUtil(String path){
+    public ReadUtil(String path, Boolean sameSeed){
         this.path = path;
+        this.sameSeed = sameSeed;
     }
 
     public String getPath(){
@@ -66,7 +68,12 @@ public class ReadUtil {
         String text = readText();
         String[] lines = text.split("\n");
         String appPackage = lines[0];
-        Long seed = new Long(lines[1]);
+        Long seed;
+        if(sameSeed){
+            seed = new Long(lines[1]);
+        } else {
+            seed = new Random().nextLong();
+        }
         Random random = new Random(seed);
         String action = "";
         for(int i = 2; i< lines.length; i++){

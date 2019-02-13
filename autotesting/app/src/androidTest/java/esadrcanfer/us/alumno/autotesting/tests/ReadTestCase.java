@@ -18,22 +18,9 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 public class ReadTestCase {
 
     @Test
-    public void read1() throws UiObjectNotFoundException {
+    public void read() throws UiObjectNotFoundException {
         UiDevice.getInstance(getInstrumentation());
-        ReadUtil readUtil = new ReadUtil("TestCase-20190212_172701.txt");
-        TestCase testCase = readUtil.generateTestCase();
-        Log.d("TFG","Test case found: "+testCase);
-        Log.d("TFG","Runnig it...");
-        testCase.executeBefore();
-        testCase.executeTest();
-        testCase.executeAfter();
-        Log.d("TFG","Done!");
-    }
-
-    @Test
-    public void read2() throws UiObjectNotFoundException {
-        UiDevice.getInstance(getInstrumentation());
-        ReadUtil readUtil = new ReadUtil("TestCase-20190213_142439.txt");
+        ReadUtil readUtil = new ReadUtil("TestCase-20190213_142439.txt", true);
         TestCase testCase = readUtil.generateTestCase();
         Log.d("TFG","Test case found: "+testCase);
         Log.d("TFG","Runnig it...");
