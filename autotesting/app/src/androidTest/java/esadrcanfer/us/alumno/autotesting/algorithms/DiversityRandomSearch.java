@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -20,6 +21,8 @@ import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.dynamic.DynamicObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
+
+import static android.os.SystemClock.sleep;
 
 public class DiversityRandomSearch {
     long iterations;
@@ -62,6 +65,18 @@ public class DiversityRandomSearch {
             Log.d("TFG", "Diferent actions iteration " + (i+1) +": " + diferentActions);
             i++;
         }
+        if(!saveAllTestCases){
+            WriterUtil writerUtil;
+            for (TestCase t: testCases){
+                writerUtil = new WriterUtil();
+                writerUtil.write(appPackage);
+                writerUtil.write("-10000");
+                for(Action a: t.getTestActions()){
+                    writerUtil.write(a.toString());
+                }
+                sleep(1000);
+            }
+        }
 
         return testCases;
     }
@@ -69,25 +84,36 @@ public class DiversityRandomSearch {
     private TestCase buildTestCase(UiDevice device, String appPackage) throws UiObjectNotFoundException {
         List<Action> testCaseActions;
         List<Action> availableActions;
+        Random chosenSeed = new Random();
+        Long seed = chosenSeed.nextLong();
+        Random seeds = new Random(seed);
         Action chosenAction;
         startApp(appPackage);
         testCaseActions = new ArrayList<>();
-        availableActions = createAction(device, new Random());
+        availableActions = createAction(device, seeds.nextInt());
+        WriterUtil writerUtil = null;
+        if(saveAllTestCases){
+            writerUtil = new WriterUtil();
+            writerUtil.write(appPackage);
+            writerUtil.write(seed.toString());
+        }
         while (testCaseActions.size() < actionsLength && availableActions.size() > 0) {
-            if (!isSameNode(device, availableActions, new Random())) {
-                availableActions = createAction(device, new Random());
-            }
             chosenAction = availableActions.get((int) (Math.random() * availableActions.size()));
             testCaseActions.add(chosenAction);
             Log.d("TFG", "Executing action: " + chosenAction);
+            chosenAction.perform();
+            if(saveAllTestCases){
+                writerUtil.write(chosenAction.toString());
+            }
+            availableActions = createAction(device, seeds.nextInt());
         }
         closeApp(appPackage);
         return new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions);
     }
 
-    private List<Action> createAction(UiDevice device, Random random) {
+    private List<Action> createAction(UiDevice device, Integer seed) {
         Map<UiObject, Action> actions;
-        actions = ActionFactory.createActions(device, random.nextInt());
+        actions = ActionFactory.createActions(device, seed);
         return new ArrayList<>(actions.values());
     }
 

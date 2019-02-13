@@ -4,9 +4,12 @@ import android.util.Log;
 
 import org.junit.Test;
 
+import java.util.List;
+
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import esadrcanfer.us.alumno.autotesting.TestCase;
+import esadrcanfer.us.alumno.autotesting.algorithms.DiversityRandomSearch;
 import esadrcanfer.us.alumno.autotesting.algorithms.DynamicRandomSearch;
 import esadrcanfer.us.alumno.autotesting.algorithms.RandomSearch;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraph;
@@ -49,6 +52,14 @@ public class Button2Test {
         testCase.executeTest();
         testCase.executeAfter();
         Log.d("TFG","Done!");
+    }
+
+    @Test
+    public void testDiversityRandomSearch() throws UiObjectNotFoundException {
+        UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
+        DiversityRandomSearch algorithm=new DiversityRandomSearch(10, 2,4, appPackageName, true);
+        List<TestCase> testCases=algorithm.run(mDevice, appPackageName);
+        Log.d("TFG","Test cases founded: " + testCases);
     }
 
     @Test
