@@ -10,6 +10,7 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import esadrcanfer.us.alumno.autotesting.TestCase;
 import esadrcanfer.us.alumno.autotesting.algorithms.DiversityRandomSearch;
+import esadrcanfer.us.alumno.autotesting.algorithms.DiversityRandomSearch2;
 import esadrcanfer.us.alumno.autotesting.algorithms.DynamicRandomSearch;
 import esadrcanfer.us.alumno.autotesting.algorithms.RandomSearch;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraph;
@@ -73,6 +74,14 @@ public class TextInputTest {
     public void testDiversityRandomSearch() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
         DiversityRandomSearch algorithm=new DiversityRandomSearch(10, 1,2, appPackageName, false);
+        List<TestCase> testCases=algorithm.run(mDevice, appPackageName);
+        Log.d("TFG","Test cases founded: " + testCases.size());
+    }
+
+    @Test
+    public void testDiversityRandomSearch2() throws UiObjectNotFoundException {
+        UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
+        DiversityRandomSearch2 algorithm=new DiversityRandomSearch2(2, 2,1, appPackageName, false);
         List<TestCase> testCases=algorithm.run(mDevice, appPackageName);
         Log.d("TFG","Test cases founded: " + testCases.size());
     }

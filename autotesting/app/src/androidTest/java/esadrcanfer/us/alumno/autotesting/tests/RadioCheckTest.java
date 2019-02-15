@@ -76,17 +76,22 @@ public class RadioCheckTest {
         for (UiObject radioButton: radioButtons){
             RadioButtonInputGenerator radioButtonInputGenerator = new RadioButtonInputGenerator(new Random().nextInt());
             RadioButtonAction radioButtonAction = new RadioButtonAction(radioButton,radioButtonInputGenerator);
-            radioButtonAction.perform();
+            //radioButtonAction.perform();
         }
         List<UiObject> checkboxes = ElementIdentifier.findElements(mDevice, "android.widget.CheckBox");
+        if(checkboxes.contains(checkboxes.get(0))) {
+            Log.d("TFG", "True");
+        } else {
+            Log.d("TFG", "False");
+        }
         for (UiObject checkbox: checkboxes){
             CheckBoxAction checkBoxAction = new CheckBoxAction(checkbox);
-            checkBoxAction.perform();
+            //checkBoxAction.perform();
         }
         List<UiObject> buttons = ElementIdentifier.findElements(mDevice, "android.widget.Button");
         for (UiObject button: buttons){
             ButtonAction buttonAction = new ButtonAction(button);
-            buttonAction.perform();
+            //buttonAction.perform();
         }
     }
 

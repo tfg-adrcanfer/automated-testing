@@ -23,11 +23,12 @@ public abstract class  Action {
         Action action = (Action) o;
 
         boolean result=false;
-        try {
-            result = target.getClassName().equals(action.target.getClassName()) && target.getText().equals(action.target.getText());
-        }catch(UiObjectNotFoundException e){
-          e.printStackTrace();
-        }
+        //try {
+        //    result = target.getClassName().equals(action.target.getClassName()) && target.getText().equals(action.target.getText());
+        //}catch(UiObjectNotFoundException e){
+        //  e.printStackTrace();
+        //}
+        result = this.toString().equals(o.toString());
         return result;
     }
 
@@ -37,6 +38,7 @@ public abstract class  Action {
         result = 31 * result + (target != null ? target.hashCode() : 0);
         return result;
     }
+
 
     public UiObject getTarget() {
         return target;
