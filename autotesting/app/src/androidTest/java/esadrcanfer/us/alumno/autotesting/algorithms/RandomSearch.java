@@ -57,14 +57,11 @@ public class RandomSearch {
         List<Action> testActions=new ArrayList<>();
         List<Action> candidateActions=null;
         Action chosenAction=null;
-        //WriterUtil writer = new WriterUtil();
-        //Log.d("TFG", "TestCase File: " + writer.getPath());
         while(testActions.size()<actionsLength && graph.getAvailableActions().size() > 0){
             candidateActions=graph.getAvailableActions();
             chosenAction=candidateActions.get((int)(Math.random()*candidateActions.size()));
             testActions.add(chosenAction);
-            //writer.write(chosenAction.toString());
-            graph.performAction(chosenAction);
+            graph.fictitiousPerformAction(chosenAction);
         }
         return new TestCase(app, Collections.EMPTY_SET,beforeActions,testActions,afterActions);
     }

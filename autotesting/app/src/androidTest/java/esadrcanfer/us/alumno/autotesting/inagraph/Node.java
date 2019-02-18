@@ -26,7 +26,7 @@ public class Node {
 
 
     public boolean isOutboundAction(Action action){
-        return outputVetex.containsKey(action);
+        return outputVetex.keySet().contains(action);
     }
 
     public Map<Action,Node> getOutputVertex(){
@@ -40,5 +40,16 @@ public class Node {
 
     public Set<UiObject> getControls() {
         return controls;
+    }
+
+    @Override
+    public String toString(){
+        String res = "[";
+        for (Action a: availableActions) {
+            res += a.toString()+", ";
+        }
+        res = res.substring(0, res.length()-2);
+        res +="]";
+        return res;
     }
 }

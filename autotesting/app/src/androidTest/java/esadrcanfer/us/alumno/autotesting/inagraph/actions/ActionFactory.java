@@ -13,7 +13,6 @@ import androidx.test.uiautomator.UiObject;
 public class ActionFactory {
 
     public static Map<UiObject, Action> createInputActions(UiDevice device, Integer seed) {
-        Log.d("TFG", "Seed: " + seed);
         TextInputGenerator generator = new TextInputGenerator(seed);
         List<UiObject> inputTexts = ElementIdentifier.findElements(device, "android.widget.EditText");
         Map<UiObject, Action> result = new HashMap<>();

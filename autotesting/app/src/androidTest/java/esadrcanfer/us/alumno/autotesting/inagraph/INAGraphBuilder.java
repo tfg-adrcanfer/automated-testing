@@ -15,6 +15,7 @@ import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
 public class INAGraphBuilder {
 
     private static INAGraphBuilder _instance;
+    private List<Action> executedActions = new ArrayList<>();
 
     private INAGraphBuilder() {
     }
@@ -27,7 +28,7 @@ public class INAGraphBuilder {
 
     public INAGraph build(UiDevice device, String appPackage) throws UiObjectNotFoundException {
         startApp(device, appPackage);
-        Node node = buildNode(device);
+        Node node = buildNode(device, appPackage);
         closeApp(device, appPackage);
         return new INAGraph(node);
     }
@@ -47,10 +48,10 @@ public class INAGraphBuilder {
         }
     }
 
-    public Node buildNode(UiDevice device) throws UiObjectNotFoundException {
+    public Node buildNode(UiDevice device, String appPackage) throws UiObjectNotFoundException {
         Node node = new Node();
         createActions(node, device);
-        buildVertex(node, device);
+        buildVertex(node, device, appPackage);
         return node;
     }
 
@@ -61,18 +62,37 @@ public class INAGraphBuilder {
     }
 
 
-    public void buildVertex(Node node, UiDevice device) throws UiObjectNotFoundException {
+    public void buildVertex(Node node, UiDevice device, String appPackage) throws UiObjectNotFoundException {
         for (Action a : node.getAvailableActions()) {
             try {
+                executedActions.add(a);
+                Boolean crashed;
+                String packageName = device.getCurrentPackageName();
                 a.perform();
-                if (!isSameNode(node, device)) {
-                    Node nextNode = buildNode(device);
+                crashed = !packageName.equals(device.getCurrentPackageName());
+                if (!isSameNode(node, device) && !crashed) {
+                    Node nextNode = buildNode(device, appPackage);
                     node.getOutputVertex().put(a, nextNode);
                     Action goBack = new GoBackAction(device);
                     nextNode.getOutputVertex().put(goBack, node);
                     goBack.perform();
                 }
+                executedActions.remove(a);
+                if(crashed){
+                    closeApp(device, appPackage);
+                    startApp(device, appPackage);
+                    for(Action action: executedActions){
+                        action.perform();
+                    }
+                }
+
             } catch (Throwable e) {
+                executedActions.remove(a);
+                closeApp(device, appPackage);
+                startApp(device, appPackage);
+                for(Action action: executedActions){
+                    action.perform();
+                }
                 e.printStackTrace();
             }
         }
