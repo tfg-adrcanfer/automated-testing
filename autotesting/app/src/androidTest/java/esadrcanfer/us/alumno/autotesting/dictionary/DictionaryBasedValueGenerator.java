@@ -1,13 +1,16 @@
 package esadrcanfer.us.alumno.autotesting.dictionary;
 
-import java.util.List;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import net.sf.extjwnl.JWNLException;
 import net.sf.extjwnl.data.IndexWord;
 import net.sf.extjwnl.data.POS;
 import net.sf.extjwnl.dictionary.Dictionary;
+
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class DictionaryBasedValueGenerator {
     public static final int DEFAULT_NUMBER_OF_WORDS=3;
@@ -39,7 +42,7 @@ public class DictionaryBasedValueGenerator {
     }
 
     //@Override
-    public Object generate() {
+    public Object generate() throws JWNLException {
         List<POS> poses=POS.getAllPOS();
         POS pos=defaultPOS;
         IndexWord word;

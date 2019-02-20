@@ -2,9 +2,14 @@ package esadrcanfer.us.alumno.autotesting.tests;
 
 import android.util.Log;
 
+import net.sf.extjwnl.JWNLException;
+
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
@@ -13,6 +18,7 @@ import esadrcanfer.us.alumno.autotesting.algorithms.DiversityRandomSearch;
 import esadrcanfer.us.alumno.autotesting.algorithms.DiversityRandomSearch2;
 import esadrcanfer.us.alumno.autotesting.algorithms.DynamicRandomSearch;
 import esadrcanfer.us.alumno.autotesting.algorithms.RandomSearch;
+import esadrcanfer.us.alumno.autotesting.dictionary.DictionaryBasedValueGenerator;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraph;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraphBuilder;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.graph.ApplicationCrashObjectiveFunction;
@@ -87,12 +93,10 @@ public class TextInputTest {
     }
 
     @Test
-    public void testCloseApp() {
-        WriterUtil writerUtil = new WriterUtil();
-        writerUtil.write("Hola");
-        writerUtil.write("¿Cómo estás?");
-        writerUtil.write("Adiós");
-        Log.d("TFG", writerUtil.getPath());
+    public void testCloseApp() throws JWNLException {
+        DictionaryBasedValueGenerator dictionary = new DictionaryBasedValueGenerator(1, new Random(1).nextInt());
+        String text = dictionary.generate().toString();
+        Log.d("TFG", text);
     }
 
 }
