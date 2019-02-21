@@ -11,23 +11,11 @@ import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
 
 public class InteligentActionSelection {
 	
-	private static Map<Action, Integer> invertedValues(Map<Action, Integer> originalValues){
-		Map<Action, Integer> first = new HashMap<>();
-		Map<Action, Double> second = new HashMap<>();
+	private static Map<Action, Integer> invertedValues(Map<Action, Integer> elements){
 		Map<Action, Integer> res = new HashMap<>();
-		
-		for(Map.Entry<Action, Integer> entry: originalValues.entrySet()) {
-			first.put(entry.getKey(), (entry.getValue()+1));
-		}
-		
-		for(Map.Entry<Action, Integer> entry: first.entrySet()) {
-			second.put(entry.getKey(), (double) 1/(entry.getValue()));
-		}
-		
-		Integer lcm = (int) lcm(new ArrayList<Integer>(first.values()));
-		
-		for(Map.Entry<Action, Double> entry: second.entrySet()) {
-			res.put(entry.getKey(), new Integer((int) (entry.getValue()*lcm)));
+		Integer sum = elementsSum(elements);
+		for(Map.Entry<Action, Integer> entry: elements.entrySet()) {
+			res.put(entry.getKey(), sum - (entry.getValue() + 1));
 		}
 		return res;
 	}
@@ -38,30 +26,6 @@ public class InteligentActionSelection {
 			res = res + value + 1;
 		}
 		return res;
-	}
-	
-	private static long gcd(long a, long b)
-	{
-	    while (b > 0)
-	    {
-	        long temp = b;
-	        b = a % b; // % is remainder
-	        a = temp;
-	    }
-	    return a;
-	}
-
-	
-	private static long lcm(long a, long b)
-	{
-	    return a * (b / gcd(a, b));
-	}
-
-	private static long lcm(List<Integer> input)
-	{
-	    long result = input.get(0);
-	    for(int i = 1; i < input.size(); i++) result = lcm(result, input.get(i));
-	    return result;
 	}
 	
 	public static Action selectAction(Map<Action, Integer> elements) {

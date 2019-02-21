@@ -6,8 +6,6 @@ import net.sf.extjwnl.JWNLException;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -25,7 +23,6 @@ import esadrcanfer.us.alumno.autotesting.objectivefunctions.graph.ApplicationCra
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.dynamic.DynamicApplicationCrashObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.dynamic.DynamicTestExecutionTimeObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.graph.ObjectiveFunction;
-import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
@@ -87,7 +84,7 @@ public class TextInputTest {
     @Test
     public void testDiversityRandomSearch2() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
-        DiversityRandomSearch2 algorithm=new DiversityRandomSearch2(2, 2,1, appPackageName, false);
+        DiversityRandomSearch2 algorithm=new DiversityRandomSearch2(3, 2,2, appPackageName, false);
         List<TestCase> testCases=algorithm.run(mDevice, appPackageName);
         Log.d("TFG","Test cases founded: " + testCases.size());
     }
