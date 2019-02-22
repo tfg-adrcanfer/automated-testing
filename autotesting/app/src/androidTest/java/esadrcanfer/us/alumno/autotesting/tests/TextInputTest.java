@@ -30,6 +30,7 @@ public class TextInputTest {
 
     static String appPackageName = "esadrcanfer.us.alumno.textinputapp";
 
+    //First build a graph and use it to know the actions
     @Test
     public void testRandomSearch() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
@@ -45,6 +46,7 @@ public class TextInputTest {
         Log.d("TFG","Done!");
     }
 
+    //For each action, first create actions and then execute it.
     @Test
     public void testDynamicRandomSearch() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
@@ -59,6 +61,7 @@ public class TextInputTest {
         Log.d("TFG","Done!");
     }
 
+    //For each action, first create actions and then execute it.
     @Test
     public void testDynamicRandomSearchMaxTime() throws UiObjectNotFoundException {
         UiDevice mDevice = UiDevice.getInstance(getInstrumentation());

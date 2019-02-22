@@ -69,4 +69,12 @@ public class DiversityTest {
         List<TestCase> testCases=algorithm.run(mDevice, appPackage);
         Log.d("TFG","Test cases founded: " + testCases.size());
     }
+
+    @Test
+    public void testDiversityRandomSearch2() throws UiObjectNotFoundException {
+        UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
+        DiversityRandomSearch2 algorithm=new DiversityRandomSearch2(30, 10,6, appPackage, false);
+        List<TestCase> testCases=algorithm.run(mDevice, appPackage);
+        Log.d("TFG","Test cases founded: " + testCases);
+    }
 }

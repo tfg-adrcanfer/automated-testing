@@ -13,17 +13,22 @@ public class InteligentActionSelection {
 	
 	private static Map<Action, Integer> invertedValues(Map<Action, Integer> elements){
 		Map<Action, Integer> res = new HashMap<>();
-		Integer sum = elementsSum(elements);
+		Integer sum = elementsSum(elements, false);
 		for(Map.Entry<Action, Integer> entry: elements.entrySet()) {
 			res.put(entry.getKey(), sum - (entry.getValue() + 1));
 		}
 		return res;
 	}
 	
-	private static Integer elementsSum(Map<Action, Integer> originalValues) {
+	private static Integer elementsSum(Map<Action, Integer> values, boolean inverted) {
 		Integer res = 0;
-		for (Integer value : originalValues.values()) {
-			res = res + value + 1;
+		for (Integer value : values.values()) {
+			if(!inverted){
+				res = res + value + 1;
+			} else {
+				res = res + value;
+			}
+
 		}
 		return res;
 	}
@@ -31,7 +36,7 @@ public class InteligentActionSelection {
 	public static Action selectAction(Map<Action, Integer> elements) {
 		Random random = new Random();
 		Map<Action, Integer> inverseElements = InteligentActionSelection.invertedValues(elements);
-		Integer elementsCount = elementsSum(elements);
+		Integer elementsCount = elementsSum(inverseElements,  true);
 		Action element = null;
 		Integer randomValue = random.nextInt(elementsCount);
 		for (Map.Entry<Action, Integer> entry: inverseElements.entrySet()) {
