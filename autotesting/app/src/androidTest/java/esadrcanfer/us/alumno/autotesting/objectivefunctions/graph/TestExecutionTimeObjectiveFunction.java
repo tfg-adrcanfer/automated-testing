@@ -5,7 +5,7 @@ import esadrcanfer.us.alumno.autotesting.TestCase;
 public class TestExecutionTimeObjectiveFunction implements ObjectiveFunction {
 
     @Override
-    public double evaluate(TestCase testcase) {
+    public double evaluate(TestCase testcase, String appPackage) {
         long duration=-1;
         try{
             testcase.executeBefore();
