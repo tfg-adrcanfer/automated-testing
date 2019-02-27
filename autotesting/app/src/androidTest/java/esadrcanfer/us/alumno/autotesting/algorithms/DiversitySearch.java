@@ -13,6 +13,7 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import esadrcanfer.us.alumno.autotesting.TestCase;
+import esadrcanfer.us.alumno.autotesting.diversityActionSelection.ActionSelection;
 import esadrcanfer.us.alumno.autotesting.inagraph.CloseAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.StartAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
@@ -23,7 +24,7 @@ import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 
 import static android.os.SystemClock.sleep;
 
-public class DiversityRandomSearch2 {
+public class DiversitySearch {
     long iterations;
     long actionsLength;
     long diversityLength;
@@ -32,13 +33,15 @@ public class DiversityRandomSearch2 {
     Map<TestCase, Long> testCases;
     Boolean saveAllTestCases;
     double diferentActions;
+    ActionSelection actionSelection;
 
-    public DiversityRandomSearch2(long iterations, long diversityLength, int actionsLength, String appPackage, Boolean saveAllTestCases) {
+    public DiversitySearch(ActionSelection actionSelection, long iterations, long diversityLength, int actionsLength, String appPackage, Boolean saveAllTestCases) {
         this.iterations = iterations;
         this.actionsLength = actionsLength;
         this.diversityLength = diversityLength;
         this.saveAllTestCases = saveAllTestCases;
         this.diferentActions = 0;
+        this.actionSelection = actionSelection;
         beforeActions = new ArrayList<>();
         beforeActions.add(new StartAppAction(appPackage));
         afterActions = new ArrayList<>();
@@ -96,7 +99,7 @@ public class DiversityRandomSearch2 {
             writerUtil.write(seed.toString());
         }
         while (testCaseActions.size() < actionsLength && availableActions.size() > 0) {
-            chosenAction = InteligentActionSelection.selectAction(InteligentActionSelection.countActions(new ArrayList<TestCase>(testCases.keySet()), testCaseActions, availableActions));
+            chosenAction = actionSelection.selectAction(new ArrayList<TestCase>(testCases.keySet()), testCaseActions, availableActions);
             testCaseActions.add(chosenAction);
             Log.d("TFG", "Executing action: " + chosenAction);
             chosenAction.perform();
