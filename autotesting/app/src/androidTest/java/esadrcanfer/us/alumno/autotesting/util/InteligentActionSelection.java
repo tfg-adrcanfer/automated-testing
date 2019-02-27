@@ -54,7 +54,7 @@ public class InteligentActionSelection {
         for (TestCase t: testCases) {
             for(Action a: t.getTestActions()){
                 if(availableActions.contains(a)){
-                    if(new ArrayList<Action>(res.keySet()).contains(a)){
+                    if(res.keySet().contains(a)){
                         res.put(a, res.get(a)+1);
                     } else {
                         res.put(a, 1);
@@ -64,7 +64,7 @@ public class InteligentActionSelection {
         }
         for(Action a: testCaseActions){
             if(availableActions.contains(a)){
-                if(new ArrayList<Action>(res.keySet()).contains(a)){
+                if(res.keySet().contains(a)){
                     res.put(a, res.get(a)+1);
                 } else {
                     res.put(a, 1);
@@ -72,7 +72,7 @@ public class InteligentActionSelection {
             }
         }
         for(Action a: availableActions){
-            if(!new ArrayList<Action>(res.keySet()).contains(a)){
+            if(!res.keySet().contains(a)){
                 res.put(a, 0);
             }
         }
