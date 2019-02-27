@@ -58,7 +58,8 @@ public class DictionaryBasedValueGenerator {
             for(int i=0;i<nWords;i++){
                 if(defaultPOS==null)
                     pos=poses.get(randomGenerator.nextInt(poses.size()));
-                word=dict.getRandomIndexWord(pos, randomGenerator);
+                dict.setRandom(randomGenerator);
+                word=dict.getRandomIndexWord(pos);
                 if(!shouldBeIgnored(word.getLemma()))
                     sb.append(word.getLemma());
                 else

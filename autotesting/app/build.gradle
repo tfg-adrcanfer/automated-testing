@@ -24,7 +24,7 @@ android {
 }
 
 dependencies {
-    //implementation 'net.sf.extjwnl:extjwnl:1.9.1'
+    implementation 'net.sf.extjwnl:extjwnl:2.0.1'
     implementation 'net.sf.extjwnl:extjwnl-data-wn31:1.2'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:28.0.0'
@@ -32,6 +32,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
-    androidTestImplementation project(path: ':extjwnl')
 }
 
