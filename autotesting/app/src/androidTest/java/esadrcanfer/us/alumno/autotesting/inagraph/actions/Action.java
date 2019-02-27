@@ -34,9 +34,7 @@ public abstract class  Action {
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (target != null ? target.hashCode() : 0);
-        return result;
+        return 31 * this.toString().hashCode();
     }
 
 
