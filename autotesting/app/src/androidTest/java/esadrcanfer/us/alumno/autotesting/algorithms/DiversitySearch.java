@@ -1,7 +1,6 @@
 package esadrcanfer.us.alumno.autotesting.algorithms;
 
 import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,7 +17,6 @@ import esadrcanfer.us.alumno.autotesting.inagraph.CloseAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.StartAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
-import esadrcanfer.us.alumno.autotesting.util.InteligentActionSelection;
 import esadrcanfer.us.alumno.autotesting.util.Tuple;
 import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 
@@ -34,6 +32,7 @@ public class DiversitySearch {
     Boolean saveAllTestCases;
     double diferentActions;
     ActionSelection actionSelection;
+    private  Random random;
 
     public DiversitySearch(ActionSelection actionSelection, long iterations, long diversityLength, int actionsLength, String appPackage, Boolean saveAllTestCases) {
         this.iterations = iterations;
@@ -50,6 +49,7 @@ public class DiversitySearch {
     }
 
     public List<TestCase> run(UiDevice device, String appPackage) throws UiObjectNotFoundException {
+        actionSelection.setRandom(getRandom());
         int i = 0;
         Tuple<TestCase, Long> testCaseSeedPair;
         while (i < iterations) {
@@ -59,11 +59,8 @@ public class DiversitySearch {
                 testCases.put(testCaseSeedPair.getKey(), testCaseSeedPair.getValue());
             } else {
                 testCases = diversityMeasure(testCaseSeedPair);
-                diferentActions = evaluateDiversityTestCases(new ArrayList<>(testCases.keySet()));
             }
-            if (i == diversityLength - 1) {
-                diferentActions = evaluateDiversityTestCases(new ArrayList<>(testCases.keySet()));
-            }
+            diferentActions = evaluateDiversityTestCases(new ArrayList<>(testCases.keySet()));
             Log.d("TFG", "Diferent actions iteration " + (i+1) +": " + diferentActions);
             i++;
         }
@@ -161,5 +158,16 @@ public class DiversitySearch {
             }
         }
         return actions.size() * 1.0;
+    }
+
+    public Random getRandom() {
+        if(random == null){
+            random = new Random();
+        }
+        return random;
+    }
+
+    public void setRandom(Random random) {
+        this.random = random;
     }
 }

@@ -20,6 +20,7 @@ public class RandomSearch {
     ObjectiveFunction objective;
     long iterations;
     long actionsLength;
+    Random random;
 
     public RandomSearch(ObjectiveFunction objective, long iterations, int actionsLength) {
         this.objective = objective;
@@ -62,11 +63,24 @@ public class RandomSearch {
         Action chosenAction=null;
         while(testActions.size()<actionsLength && graph.getAvailableActions().size() > 0){
             candidateActions=graph.getAvailableActions();
-            Integer selectedActionIndex = new Random().nextInt(candidateActions.size());
+            Integer selectedActionIndex = getRandom().nextInt(candidateActions.size());
             chosenAction=candidateActions.get(selectedActionIndex);
             testActions.add(chosenAction);
             graph.fictitiousPerformAction(chosenAction);
         }
         return new TestCase(app, Collections.EMPTY_SET,beforeActions,testActions,afterActions);
     }
+
+    public Random getRandom(){
+        if(random == null){
+            random = new Random();
+        }
+        return random;
+    }
+
+    public void setRandom(Random random){
+        this.random = random;
+    }
+
+
 }

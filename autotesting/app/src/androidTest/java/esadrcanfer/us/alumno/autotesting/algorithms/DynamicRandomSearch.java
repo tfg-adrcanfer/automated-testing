@@ -27,6 +27,7 @@ public class DynamicRandomSearch {
     List<Action> afterActions;
     List<Action> testActions;
     Boolean saveAllTestCases;
+    Random random;
 
     public DynamicRandomSearch(DynamicObjectiveFunction objective, long iterations, int actionsLength, String appPackage, Boolean saveAllTestCases) {
         this.objective = objective;
@@ -64,7 +65,7 @@ public class DynamicRandomSearch {
             testCaseActions = new ArrayList<>();
             availableActions = createAction(device, seeds.nextInt());
             while(testCaseActions.size()<actionsLength && availableActions.size() > 0){
-                chosenAction=availableActions.get((int)(Math.random()*availableActions.size()));
+                chosenAction=availableActions.get(getRandom().nextInt(availableActions.size()));
                 testCaseActions.add(chosenAction);
                 Log.d("TFG","Executing action: "+ chosenAction);
                 if(saveAllTestCases){
@@ -115,6 +116,17 @@ public class DynamicRandomSearch {
         } catch (InterruptedException e) {
 
         }
+    }
+
+    public Random getRandom(){
+        if(random == null){
+            random = new Random();
+        }
+        return random;
+    }
+
+    public void setRandom(Random random){
+        this.random = random;
     }
 
     /**public boolean isSameNode(UiDevice device, List<Action> availableActions, Random random) {
