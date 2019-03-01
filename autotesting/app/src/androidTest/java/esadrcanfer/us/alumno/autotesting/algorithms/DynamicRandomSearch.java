@@ -72,6 +72,10 @@ public class DynamicRandomSearch {
                     writerUtil.write(chosenAction.toString());
                 }
                 eval += objective.evaluate(chosenAction, appPackage);
+                String appName = UiDevice.getInstance().getCurrentPackageName();
+                if(!appName.equals(appPackage)){
+                    break;
+                }
                 availableActions = createAction(device, seeds.nextInt());
             }
             Log.d("TFG", "Eval: " + eval);

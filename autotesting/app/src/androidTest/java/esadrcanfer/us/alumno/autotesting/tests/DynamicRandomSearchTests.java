@@ -40,7 +40,7 @@ public class DynamicRandomSearchTests {
     public void testButtomApp1Crash() throws UiObjectNotFoundException {
         String appPackageName = "com.example.testingandroid";
         DynamicObjectiveFunction objective=new DynamicApplicationCrashObjectiveFunction();
-        Integer iterations = 10;
+        Integer iterations = 30;
         Integer actionLength = 2;
         Boolean saveAllTestCases = false;
         dynamicRandomSearchTestTemplate(appPackageName, objective, iterations, actionLength, saveAllTestCases);
@@ -50,8 +50,8 @@ public class DynamicRandomSearchTests {
     @Test
     public void testButtomApp1MaxExecutionTime() throws UiObjectNotFoundException {
         String appPackageName = "com.example.testingandroid";
-        DynamicObjectiveFunction objective=new DynamicTestExecutionTimeObjectiveFunction();
-        Integer iterations = 10;
+        DynamicObjectiveFunction objective=new DynamicTestExecutionTimeObjectiveFunction(1000);
+        Integer iterations = 40;
         Integer actionLength = 2;
         Boolean saveAllTestCases = false;
         dynamicRandomSearchTestTemplate(appPackageName, objective, iterations, actionLength, saveAllTestCases);
@@ -73,7 +73,7 @@ public class DynamicRandomSearchTests {
     @Test
     public void testButtomApp2MaxExecutionTime() throws UiObjectNotFoundException {
         String appPackageName = "com.example.testingandroid2";
-        DynamicObjectiveFunction objective=new DynamicTestExecutionTimeObjectiveFunction();
+        DynamicObjectiveFunction objective=new DynamicTestExecutionTimeObjectiveFunction(3000);
         Integer iterations = 10;
         Integer actionLength = 2;
         Boolean saveAllTestCases = false;
@@ -95,7 +95,7 @@ public class DynamicRandomSearchTests {
     @Test
     public void testTextInputAppMaxExecutionTime() throws UiObjectNotFoundException {
         String appPackageName = "esadrcanfer.us.alumno.textinputapp";
-        DynamicObjectiveFunction objective=new DynamicTestExecutionTimeObjectiveFunction();
+        DynamicObjectiveFunction objective=new DynamicTestExecutionTimeObjectiveFunction(3000);
         Integer iterations = 10;
         Integer actionLength = 2;
         Boolean saveAllTestCases = false;
@@ -117,7 +117,7 @@ public class DynamicRandomSearchTests {
     @Test
     public void testWidgetAppMaxExecutionTime() throws UiObjectNotFoundException {
         String appPackageName = "esadrcanfer.us.alumno";
-        DynamicObjectiveFunction objective=new DynamicTestExecutionTimeObjectiveFunction();
+        DynamicObjectiveFunction objective=new DynamicTestExecutionTimeObjectiveFunction(3000);
         Integer iterations = 10;
         Integer actionLength = 2;
         Boolean saveAllTestCases = false;
@@ -139,7 +139,7 @@ public class DynamicRandomSearchTests {
     @Test
     public void testDiversityMaxExecutionTime() throws UiObjectNotFoundException {
         String appPackageName = "esadrcanfer.us.diversityapp";
-        DynamicObjectiveFunction objective=new DynamicTestExecutionTimeObjectiveFunction();
+        DynamicObjectiveFunction objective=new DynamicTestExecutionTimeObjectiveFunction(3000);
         Integer iterations = 10;
         Integer actionLength = 2;
         Boolean saveAllTestCases = false;

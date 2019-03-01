@@ -11,9 +11,8 @@ public class DynamicApplicationCrashObjectiveFunction implements DynamicObjectiv
         double result=0;
         try {
             UiDevice device = UiDevice.getInstance();
-            String packageName = device.getCurrentPackageName();
             action.perform();
-            if(!packageName.equals(device.getCurrentPackageName())){
+            if(!appPackage.equals(device.getCurrentPackageName())){
                 result = 1;
             }
         }catch(Exception e){
