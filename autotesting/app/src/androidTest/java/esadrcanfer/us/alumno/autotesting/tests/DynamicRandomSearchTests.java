@@ -40,8 +40,8 @@ public class DynamicRandomSearchTests {
     public void testButtomApp1Crash() throws UiObjectNotFoundException {
         String appPackageName = "com.example.testingandroid";
         DynamicObjectiveFunction objective=new DynamicApplicationCrashObjectiveFunction();
-        Integer iterations = 30;
-        Integer actionLength = 2;
+        Integer iterations = 10;
+        Integer actionLength = 3;
         Boolean saveAllTestCases = false;
         dynamicRandomSearchTestTemplate(appPackageName, objective, iterations, actionLength, saveAllTestCases);
     }

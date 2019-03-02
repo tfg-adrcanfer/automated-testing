@@ -84,6 +84,11 @@ public class DynamicRandomSearch {
                 selectedSeed = seed;
                 testActions = new ArrayList<>();
                 testActions.addAll(testCaseActions);
+            } else if (eval == currentBestEval && (testActions.size() == 0 || testActions.size()> testCaseActions.size())){
+                currentBestEval=eval;
+                selectedSeed = seed;
+                testActions = new ArrayList<>();
+                testActions.addAll(testCaseActions);
             }
             closeApp(appPackage);
             i++;
