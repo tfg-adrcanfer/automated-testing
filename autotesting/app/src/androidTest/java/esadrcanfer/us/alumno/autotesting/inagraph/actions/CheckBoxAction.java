@@ -10,6 +10,7 @@ public class CheckBoxAction extends Action {
     }
     @Override
     public void perform() throws UiObjectNotFoundException {
+        value = target.getText();
         this.target.click();
     }
 }

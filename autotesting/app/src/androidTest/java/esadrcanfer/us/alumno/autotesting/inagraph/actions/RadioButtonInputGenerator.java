@@ -15,9 +15,12 @@ public class RadioButtonInputGenerator extends InputGenerator {
         this.seed = seed;
     }
 
-    public void generateInput(UiObject target) throws UiObjectNotFoundException {
+    public String generateInput(UiObject target) throws UiObjectNotFoundException {
+        String value = null;
         Integer selectedRadioButton = new Random(seed).nextInt(target.getChildCount());
         UiObject dataValue = target.getChild(new UiSelector().className(RadioButton.class.getName()).index(selectedRadioButton));
+        value = dataValue.getText();
         dataValue.click();
+        return value;
     }
 }

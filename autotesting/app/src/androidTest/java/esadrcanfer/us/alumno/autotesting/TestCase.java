@@ -1,5 +1,7 @@
 package esadrcanfer.us.alumno.autotesting;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -57,8 +59,10 @@ public class TestCase {
     }
 
     public void executeTest() throws UiObjectNotFoundException {
-        for(Action a:testActions)
+        for(Action a:testActions) {
+            Log.d("ISA", a.getValue());
             a.perform();
+        }
     }
 
     @Override

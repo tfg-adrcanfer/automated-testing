@@ -9,5 +9,5 @@ import androidx.test.uiautomator.UiObjectNotFoundException;
 
 public abstract class InputGenerator {
 
-    public abstract void generateInput(UiObject object) throws UiObjectNotFoundException;
+    public abstract String generateInput(UiObject object) throws UiObjectNotFoundException;
 }

@@ -13,7 +13,7 @@ public abstract class InputAction extends Action {
     }
 
     public void perform() throws UiObjectNotFoundException {
-        inputGenerator.generateInput(target);
+        value = inputGenerator.generateInput(target);
     }
 
 }

@@ -15,15 +15,17 @@ public class TextInputGenerator extends InputGenerator {
         this.seed = seed;
     }
 
-    public void generateInput(UiObject object) {
+    public String generateInput(UiObject object) {
+        String value = null;
         try {
             DictionaryBasedValueGenerator dictionary = new DictionaryBasedValueGenerator(1, seed);
-            String text = dictionary.generate().toString();
-            Log.d("TFG", text);
-            object.setText(text);
+            value = dictionary.generate().toString();
+            Log.d("TFG", value);
+            object.setText(value);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return value;
     }
 
 
