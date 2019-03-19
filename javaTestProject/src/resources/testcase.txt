@@ -1,3 +1,0 @@
-appPackageName
-TEXT, UiSelector[RESOURCE_ID=esadrcanfer.us.alumno.textinputapp:id/editText1]
-BUTTON, UiSelector[RESOURCE_ID=esadrcanfer.us.alumno.textinputapp:id/button]
