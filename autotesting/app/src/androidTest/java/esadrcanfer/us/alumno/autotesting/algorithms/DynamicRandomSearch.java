@@ -103,7 +103,7 @@ public class DynamicRandomSearch {
                 writerUtil.write(a.toString());
             }
         }
-        return new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions);
+        return new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions, new ArrayList<>());
     }
 
     private List<Action> createAction(UiDevice device, Integer seed) {

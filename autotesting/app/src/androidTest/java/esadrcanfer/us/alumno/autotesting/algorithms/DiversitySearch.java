@@ -106,7 +106,7 @@ public class DiversitySearch {
             availableActions = createAction(device, seeds.nextInt());
         }
         closeApp(appPackage);
-        return new Tuple<>(new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions), seed);
+        return new Tuple<>(new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, new ArrayList<>()), seed);
     }
 
     private List<Action> createAction(UiDevice device, Integer seed) {

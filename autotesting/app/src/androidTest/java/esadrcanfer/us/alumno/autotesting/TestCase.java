@@ -15,13 +15,15 @@ public class TestCase {
     List<Action> beforeActions;
     List<Action> testActions;
     List<Action> afterActions;
+    List<String> finalState;
 
-    public TestCase(String app, Set<String> exceutionContext, List<Action> beforeActions, List<Action> testActions, List<Action> afterActions) {
+    public TestCase(String app, Set<String> exceutionContext, List<Action> beforeActions, List<Action> testActions, List<Action> afterActions, List<String> finalState) {
         this.app = app;
         this.exceutionContext = exceutionContext;
         this.beforeActions = beforeActions;
         this.testActions = testActions;
         this.afterActions = afterActions;
+        this.finalState = finalState;
     }
 
     @Override
@@ -60,7 +62,6 @@ public class TestCase {
 
     public void executeTest() throws UiObjectNotFoundException {
         for(Action a:testActions) {
-            Log.d("ISA", a.getValue());
             a.perform();
         }
     }
@@ -75,6 +76,10 @@ public class TestCase {
 
     public List<Action> getTestActions(){
         return new ArrayList<>(testActions);
+    }
+
+    public List<String> getFinalState(){
+        return new ArrayList<>(finalState);
     }
 
     public double compareTestCase (TestCase testCase){

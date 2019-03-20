@@ -83,10 +83,11 @@ public class ReadUtil {
         beforeActions.add(new StartAppAction(appPackage));
         afterActions.add(new CloseAppAction(appPackage));
 
-        return new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions);
+        return new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions, new ArrayList<>());
     }
 
-    private Action generateActionFromString(String action, Integer seed){
+    public static Action generateActionFromString(String action, Integer seed){
+        Log.d("ISA", action);
         String[] splitAction = action.split(",");
         String type = splitAction[0];
         String resourceId = splitAction[1];
