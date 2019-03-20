@@ -32,5 +32,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    implementation "org.springframework:spring-core:4.2.0.RELEASE"
+    implementation "org.springframework:spring-expression:4.2.0.RELEASE"
+    implementation "org.springframework:spring-context:4.2.0.RELEASE"
 }
 

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
+import esadrcanfer.us.alumno.autotesting.util.PredicateEvaluator;
 
 public class TestCase {
     String app;
@@ -64,6 +65,11 @@ public class TestCase {
         for(Action a:testActions) {
             a.perform();
         }
+        if(finalState.size() != 0){
+            Log.d("ISA", "Checking test");
+            PredicateEvaluator predicateEvaluator = new PredicateEvaluator();
+            Boolean res = predicateEvaluator.evaluate("Predicate", testActions);
+        }
     }
 
     @Override
@@ -80,6 +86,10 @@ public class TestCase {
 
     public List<String> getFinalState(){
         return new ArrayList<>(finalState);
+    }
+
+    public void setFinalState(List<String> finalState){
+        this.finalState = finalState;
     }
 
     public double compareTestCase (TestCase testCase){

@@ -169,7 +169,12 @@ public class AutomaticRepairTests {
         testCase.executeTest();
         List<String> finalState = labelsDetection();
         testCase.executeAfter();
+        testCase.setFinalState(finalState);
+        //Aquí tenemos un TestCase con su lista de labels al final de la ejecución
         Log.d("ISA", "Done!");
+        testCase.executeBefore();
+        testCase.executeTest();
+        testCase.executeAfter();
     }
 
     public static TestCase createTestCase(){
@@ -196,8 +201,11 @@ public class AutomaticRepairTests {
         Log.d("ISA", "Size: " + elements.size());
         for (UiObject2 label : elements) {
             String text = label.getText();
-            finalState.add(text);
-            Log.d("ISA", "Label: " + label.getText());
+            //Solución básica, hay que mejorarla
+            if(!(text.contains(":") || text.contains("%"))) {
+                finalState.add(text);
+                Log.d("ISA", "Label: " + label.getText());
+            }
         }
         return finalState;
     }
