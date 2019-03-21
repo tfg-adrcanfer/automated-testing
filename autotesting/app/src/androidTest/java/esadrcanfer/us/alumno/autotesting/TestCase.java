@@ -17,6 +17,7 @@ public class TestCase {
     List<Action> testActions;
     List<Action> afterActions;
     List<String> finalState;
+    String predicate;
 
     public TestCase(String app, Set<String> exceutionContext, List<Action> beforeActions, List<Action> testActions, List<Action> afterActions, List<String> finalState) {
         this.app = app;
@@ -61,15 +62,20 @@ public class TestCase {
             a.perform();
     }
 
-    public void executeTest() throws UiObjectNotFoundException {
+    public boolean executeTest() throws UiObjectNotFoundException {
+        Boolean res=false;
         for(Action a:testActions) {
             a.perform();
         }
-        if(finalState.size() != 0){
+
+        if(finalState.size() != 0 && predicate!=null){
             Log.d("ISA", "Checking test");
             PredicateEvaluator predicateEvaluator = new PredicateEvaluator();
-            Boolean res = predicateEvaluator.evaluate("Predicate", testActions);
+            res = predicateEvaluator.evaluate(this);
         }
+        if(predicate==null)
+            res=true;
+        return res;
     }
 
     @Override
@@ -90,6 +96,14 @@ public class TestCase {
 
     public void setFinalState(List<String> finalState){
         this.finalState = finalState;
+    }
+
+    public String getPredicate(){
+        return predicate;
+    }
+
+    public void setPredicate(String predicate){
+        this.predicate = predicate;
     }
 
     public double compareTestCase (TestCase testCase){

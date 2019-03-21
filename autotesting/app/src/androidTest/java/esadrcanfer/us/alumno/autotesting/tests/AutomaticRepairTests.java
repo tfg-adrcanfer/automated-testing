@@ -170,11 +170,13 @@ public class AutomaticRepairTests {
         List<String> finalState = labelsDetection();
         testCase.executeAfter();
         testCase.setFinalState(finalState);
+        testCase.setPredicate("finalState.contains(testActions[1].value)");
         //Aquí tenemos un TestCase con su lista de labels al final de la ejecución
         Log.d("ISA", "Done!");
         testCase.executeBefore();
-        testCase.executeTest();
+        Boolean eval = testCase.executeTest();
         testCase.executeAfter();
+        Log.d("ISA", "Eval: " + eval.toString());
     }
 
     public static TestCase createTestCase(){
