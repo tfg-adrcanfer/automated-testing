@@ -45,7 +45,7 @@ public abstract class  Action {
     }
 
     public String toString(){
-        return actionType+", "+ target.getSelector().toString();
+        return actionType+", "+ target.getSelector().toString()+", "+ value;
     }
 
     public enum ActionType{
@@ -54,5 +54,9 @@ public abstract class  Action {
 
     public String getValue(){
         return value;
+    }
+
+    public void setValue(String value){
+        this.value = value;
     }
 }

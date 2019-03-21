@@ -62,19 +62,23 @@ public class TestCase {
             a.perform();
     }
 
-    public boolean executeTest() throws UiObjectNotFoundException {
+    public boolean executeTest(){
         Boolean res=false;
-        for(Action a:testActions) {
-            a.perform();
-        }
+        try{
+            for(Action a:testActions) {
+                a.perform();
+            }
+            if(finalState.size() != 0 && predicate!=null){
+                Log.d("ISA", "Checking test");
+                PredicateEvaluator predicateEvaluator = new PredicateEvaluator();
+                res = predicateEvaluator.evaluate(this);
+            }
+            if(predicate==null)
+                res=true;
 
-        if(finalState.size() != 0 && predicate!=null){
-            Log.d("ISA", "Checking test");
-            PredicateEvaluator predicateEvaluator = new PredicateEvaluator();
-            res = predicateEvaluator.evaluate(this);
+        } catch (UiObjectNotFoundException e){
+
         }
-        if(predicate==null)
-            res=true;
         return res;
     }
 
@@ -100,6 +104,10 @@ public class TestCase {
 
     public String getPredicate(){
         return predicate;
+    }
+
+    public String getAppPackage(){
+        return app;
     }
 
     public void setPredicate(String predicate){

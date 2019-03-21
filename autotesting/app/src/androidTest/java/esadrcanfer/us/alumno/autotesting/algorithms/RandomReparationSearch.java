@@ -1,0 +1,132 @@
+package esadrcanfer.us.alumno.autotesting.algorithms;
+
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+import esadrcanfer.us.alumno.autotesting.TestCase;
+import esadrcanfer.us.alumno.autotesting.inagraph.CloseAppAction;
+import esadrcanfer.us.alumno.autotesting.inagraph.StartAppAction;
+import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
+import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
+import esadrcanfer.us.alumno.autotesting.objectivefunctions.dynamic.DynamicObjectiveFunction;
+import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
+
+public class RandomReparationSearch {
+
+    long maxIterations;
+    List<Action> beforeActions;
+    List<Action> afterActions;
+    List<Action> testActions;
+    TestCase bugTestCase;
+    Long seed;
+    Random random;
+
+    public RandomReparationSearch(long maxIterations, TestCase bugTestCase, Long seed, String appPackage) {
+        this.maxIterations = maxIterations;
+        this.bugTestCase = bugTestCase;
+        this.seed = seed;
+        beforeActions = new ArrayList<>();
+        beforeActions.add(new StartAppAction(appPackage));
+        afterActions = new ArrayList<>();
+        afterActions.add(new CloseAppAction(appPackage));
+        testActions = new ArrayList<>();
+    }
+
+    public TestCase run(UiDevice device, String appPackage) throws UiObjectNotFoundException {
+        int i = 0;
+        List<Action> testCaseActions;
+        List<Action> availableActions;
+        WriterUtil writerUtil = null;
+        Action chosenAction;
+        TestCase res = null;
+        Boolean eval = false;
+        while (i < maxIterations) {
+            Log.d("TFG", "Running iteration " + (i + 1));
+            Random seeds = new Random(seed);
+            startApp(appPackage);
+            testCaseActions = new ArrayList<>();
+            availableActions = createAction(device, seeds.nextInt());
+            while (testCaseActions.size() < bugTestCase.getTestActions().size() && availableActions.size() > 0) {
+                chosenAction = availableActions.get(getRandom().nextInt(availableActions.size()));
+                testCaseActions.add(chosenAction);
+                Log.d("TFG", "Executing action: " + chosenAction);
+                chosenAction.perform();
+                String appName = UiDevice.getInstance().getCurrentPackageName();
+                if (!appName.equals(appPackage)) {
+                    break;
+                }
+                availableActions = createAction(device, seeds.nextInt());
+            }
+            closeApp(appPackage);
+            res = new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, bugTestCase.getFinalState());
+            res.setPredicate(bugTestCase.getPredicate());
+            res.executeBefore();
+            eval = res.executeTest();
+            Log.d("TFG", "Eval: " + eval);
+            res.executeAfter();
+            i++;
+            if (eval == true) {
+                break;
+            }
+        }
+        //TODO Escribir el testCase en un fichero
+        /*    writerUtil = new WriterUtil();
+            writerUtil.write(appPackage);
+            writerUtil.write(selectedSeed.toString());
+            for (Action a : testActions) {
+                writerUtil.write(a.toString());
+            }
+        */
+
+        return res;
+    }
+
+    private List<Action> createAction(UiDevice device, Integer seed) {
+        Map<UiObject, Action> actions;
+        actions = ActionFactory.createActions(device, seed);
+        return new ArrayList<>(actions.values());
+    }
+
+    private void closeApp(String appPackage) {
+        CloseAppAction action = new CloseAppAction(appPackage);
+        action.perform();
+    }
+
+    private void startApp(String appPackage) throws UiObjectNotFoundException {
+        StartAppAction action = new StartAppAction(appPackage);
+        action.perform();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+
+        }
+    }
+
+    public Random getRandom() {
+        if (random == null) {
+            random = new Random();
+        }
+        return random;
+    }
+
+    public void setRandom(Random random) {
+        this.random = random;
+    }
+
+    /**public boolean isSameNode(UiDevice device, List<Action> availableActions, Random random) {
+     boolean result = true;
+     List<Action> actions = new ArrayList<>(ActionFactory.createActions(device, random).values());
+     for (int i = 0; i < actions.size() && result; i++)
+     result = (result && availableActions.contains(actions.get(i)));
+     result = (result && availableActions.size() == (actions.size()));
+     return result;
+     }**/
+}
