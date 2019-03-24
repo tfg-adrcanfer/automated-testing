@@ -19,6 +19,9 @@ import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.dynamic.DynamicObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 
+import static android.os.SystemClock.sleep;
+import static esadrcanfer.us.alumno.autotesting.tests.AutomaticRepairTests.labelsDetection;
+
 public class RandomReparationSearch {
 
     long maxIterations;
@@ -26,13 +29,11 @@ public class RandomReparationSearch {
     List<Action> afterActions;
     List<Action> testActions;
     TestCase bugTestCase;
-    Long seed;
     Random random;
 
-    public RandomReparationSearch(long maxIterations, TestCase bugTestCase, Long seed, String appPackage) {
+    public RandomReparationSearch(long maxIterations, TestCase bugTestCase, String appPackage) {
         this.maxIterations = maxIterations;
         this.bugTestCase = bugTestCase;
-        this.seed = seed;
         beforeActions = new ArrayList<>();
         beforeActions.add(new StartAppAction(appPackage));
         afterActions = new ArrayList<>();
@@ -49,7 +50,9 @@ public class RandomReparationSearch {
         TestCase res = null;
         Boolean eval = false;
         while (i < maxIterations) {
-            Log.d("TFG", "Running iteration " + (i + 1));
+            Log.d("ISA", "Running iteration " + (i + 1));
+            Random chosenSeed = new Random();
+            Long seed = chosenSeed.nextLong();
             Random seeds = new Random(seed);
             startApp(appPackage);
             testCaseActions = new ArrayList<>();
@@ -57,7 +60,7 @@ public class RandomReparationSearch {
             while (testCaseActions.size() < bugTestCase.getTestActions().size() && availableActions.size() > 0) {
                 chosenAction = availableActions.get(getRandom().nextInt(availableActions.size()));
                 testCaseActions.add(chosenAction);
-                Log.d("TFG", "Executing action: " + chosenAction);
+                Log.d("ISA", "Executing action: " + chosenAction);
                 chosenAction.perform();
                 String appName = UiDevice.getInstance().getCurrentPackageName();
                 if (!appName.equals(appPackage)) {
@@ -65,13 +68,13 @@ public class RandomReparationSearch {
                 }
                 availableActions = createAction(device, seeds.nextInt());
             }
+            List<String> finalState = labelsDetection();
             closeApp(appPackage);
-            res = new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, bugTestCase.getFinalState());
+            res = new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, finalState);
             res.setPredicate(bugTestCase.getPredicate());
-            res.executeBefore();
-            eval = res.executeTest();
-            Log.d("TFG", "Eval: " + eval);
-            res.executeAfter();
+            eval = res.evaluate();
+            sleep(2000);
+            Log.d("ISA", "Eval: " + eval);
             i++;
             if (eval == true) {
                 break;

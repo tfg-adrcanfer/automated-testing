@@ -28,6 +28,7 @@ import esadrcanfer.us.alumno.autotesting.objectivefunctions.dynamic.DynamicTestE
 import esadrcanfer.us.alumno.autotesting.util.ReadUtil;
 import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 
+import static android.os.SystemClock.sleep;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 public class AutomaticRepairTests {
@@ -35,18 +36,16 @@ public class AutomaticRepairTests {
     @Test
     public void testCaseExecution() throws UiObjectNotFoundException {
         UiDevice device = UiDevice.getInstance(getInstrumentation());
-        ReadUtil readUtil = new ReadUtil("TestCase-20190321_211219_bug.txt", true);
+        ReadUtil readUtil = new ReadUtil("TestCase-20190321_211219_bug.txt", false);
         TestCase testCase = readUtil.generateTestCase();
         Log.d("ISA", "Loadded test case from file!");
         Log.d("ISA", "Executing it...");
-        testCase.executeBefore();
-        Boolean eval = testCase.executeTest();
+        Boolean eval = testCase.evaluate();
         if (eval == false){
-            RandomReparationSearch randomReparationSearch = new RandomReparationSearch(5, testCase, -732439767l, testCase.getAppPackage());
-            randomReparationSearch.run(device, testCase.getAppPackage());
+            RandomReparationSearch randomReparationSearch = new RandomReparationSearch(5, testCase, testCase.getAppPackage());
+            testCase = randomReparationSearch.run(device, testCase.getAppPackage());
         }
-        testCase.executeAfter();
-        Log.d("ISA", "Eval: " + eval.toString());
+        Log.d("ISA", "TestCase found: " + testCase);
     }
 
     @Test

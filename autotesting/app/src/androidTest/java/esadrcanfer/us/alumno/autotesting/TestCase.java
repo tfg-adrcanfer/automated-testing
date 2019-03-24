@@ -62,23 +62,27 @@ public class TestCase {
             a.perform();
     }
 
-    public boolean executeTest(){
-        Boolean res=false;
+    public void executeTest(){
         try{
             for(Action a:testActions) {
                 a.perform();
             }
-            if(finalState.size() != 0 && predicate!=null){
-                Log.d("ISA", "Checking test");
-                PredicateEvaluator predicateEvaluator = new PredicateEvaluator();
-                res = predicateEvaluator.evaluate(this);
-            }
-            if(predicate==null)
-                res=true;
-
         } catch (UiObjectNotFoundException e){
 
         }
+    }
+
+    public boolean evaluate(){
+        Boolean res=false;
+        if(finalState.size() != 0 && predicate!=null){
+            Log.d("ISA", "Checking test");
+            PredicateEvaluator predicateEvaluator = new PredicateEvaluator();
+            res = predicateEvaluator.evaluate(this);
+        }
+
+        if(predicate==null)
+            res=true;
+
         return res;
     }
 
