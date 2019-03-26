@@ -40,7 +40,10 @@ public class AutomaticRepairTests {
         TestCase testCase = readUtil.generateTestCase();
         Log.d("ISA", "Loadded test case from file!");
         Log.d("ISA", "Executing it...");
+        testCase.executeBefore();
+        testCase.executeTest();
         Boolean eval = testCase.evaluate();
+        testCase.executeAfter();
         if (eval == false){
             RandomReparationSearch randomReparationSearch = new RandomReparationSearch(5, testCase, testCase.getAppPackage());
             testCase = randomReparationSearch.run(device, testCase.getAppPackage());
