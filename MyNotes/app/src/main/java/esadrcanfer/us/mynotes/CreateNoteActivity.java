@@ -21,6 +21,7 @@ public class CreateNoteActivity extends AppCompatActivity {
             NoteStore.addNotes(edit.getText().toString());
             Intent intent = new Intent(view.getContext(), MainActivity.class);
             startActivityForResult(intent, 0);
+            finish();
         }
     }
 }

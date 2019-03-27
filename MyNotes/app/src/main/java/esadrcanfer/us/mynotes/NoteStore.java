@@ -11,7 +11,7 @@ public class NoteStore {
             notes = new ArrayList<>();
             notes.add("My first note");
         }
-        return notes;
+        return new ArrayList<>(notes);
     }
 
     public static void addNotes(String note){
@@ -20,5 +20,13 @@ public class NoteStore {
             notes.add("My first note");
         }
         notes.add(note);
+    }
+
+    public static void updateNote(String note, Integer pos){
+        notes.set(pos, note);
+    }
+
+    public static void deleteNote(String note){
+        notes.remove(note);
     }
 }
