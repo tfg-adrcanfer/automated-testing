@@ -21,17 +21,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final ListView listview = (ListView) findViewById(R.id.listView1);
-        final StableArrayAdapter adapter = new StableArrayAdapter(this,
-                android.R.layout.simple_list_item_1,  NoteStore.getNotes());
+        final NotesAdapter adapter = new NotesAdapter(this, NoteStore.getNotes());
         listview.setAdapter(adapter);
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getBaseContext(), DetailsActivity.class);
-                intent.putExtra("noteid", position);
-                startActivity(intent);
-            }
-        });
     }
     private class StableArrayAdapter extends ArrayAdapter<String> {
 
