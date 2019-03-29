@@ -13,9 +13,6 @@ import esadrcanfer.us.alumno.autotesting.algorithms.DiversitySearch;
 import esadrcanfer.us.alumno.autotesting.diversityActionSelection.ActionSelection;
 import esadrcanfer.us.alumno.autotesting.diversityActionSelection.IntelligentActionSelection;
 import esadrcanfer.us.alumno.autotesting.diversityActionSelection.RandomActionSelection;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.graph.ApplicationCrashObjectiveFunction;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.graph.ObjectiveFunction;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.graph.TestExecutionTimeObjectiveFunction;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 

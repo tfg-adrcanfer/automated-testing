@@ -36,7 +36,7 @@ public class AutomaticRepairTests {
     @Test
     public void testCaseExecution() throws UiObjectNotFoundException {
         UiDevice device = UiDevice.getInstance(getInstrumentation());
-        ReadUtil readUtil = new ReadUtil("TestCase-20190321_211219_bug.txt", false);
+        ReadUtil readUtil = new ReadUtil("TestCase-20190328_142649.txt", false);
         TestCase testCase = readUtil.generateTestCase();
         Log.d("ISA", "Loadded test case from file!");
         Log.d("ISA", "Executing it...");
@@ -88,7 +88,7 @@ public class AutomaticRepairTests {
         for (Action action:testActions) {
             writerUtil.write(action.toString());
         }
-        writerUtil.write(testCase.getPredicate());
+        writerUtil.write(testCase.getPredicate().toString());
         writerUtil.write(finalState.toString());
         return testCase;
     }

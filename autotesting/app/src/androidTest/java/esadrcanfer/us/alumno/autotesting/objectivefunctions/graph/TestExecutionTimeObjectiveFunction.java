@@ -1,11 +1,12 @@
 package esadrcanfer.us.alumno.autotesting.objectivefunctions.graph;
 
 import esadrcanfer.us.alumno.autotesting.TestCase;
+import esadrcanfer.us.alumno.autotesting.objectivefunctions.ObjectiveFunction;
 
 public class TestExecutionTimeObjectiveFunction implements ObjectiveFunction {
 
     @Override
-    public double evaluate(TestCase testcase, String appPackage) {
+    public Double evaluate(TestCase testcase, String appPackage) {
         long duration=-1;
         try{
             testcase.executeBefore();
@@ -16,6 +17,6 @@ public class TestExecutionTimeObjectiveFunction implements ObjectiveFunction {
         }catch(Exception e){
 
         }
-        return (double)duration;
+        return new Double(duration);
     }
 }

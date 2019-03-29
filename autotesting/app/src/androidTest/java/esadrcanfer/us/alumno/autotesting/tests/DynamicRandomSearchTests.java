@@ -11,9 +11,6 @@ import esadrcanfer.us.alumno.autotesting.algorithms.DynamicRandomSearch;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.dynamic.DynamicApplicationCrashObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.dynamic.DynamicObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.dynamic.DynamicTestExecutionTimeObjectiveFunction;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.graph.ApplicationCrashObjectiveFunction;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.graph.ObjectiveFunction;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.graph.TestExecutionTimeObjectiveFunction;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 

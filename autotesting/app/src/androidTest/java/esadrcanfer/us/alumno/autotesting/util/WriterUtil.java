@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -28,6 +29,8 @@ public class WriterUtil {
 	
 	public void write(String text) {
 		try {
+			if(!getLogFile().exists())
+				getLogFile().createNewFile();
 			FileWriter fos = new FileWriter(getLogFile(), true);
 			fos.write(text.toString());
 			fos.append("\n");
