@@ -35,8 +35,28 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 public class AutomaticRepairTests {
 
+
     @Test
-    public void testCaseExecution() throws UiObjectNotFoundException {
+    public void testRandomReparation() throws UiObjectNotFoundException {
+        UiDevice device = UiDevice.getInstance(getInstrumentation());
+        ReadUtil readUtil = new ReadUtil("TestCase-20190321_211219_bug.txt", false);
+        TestCase testCase = readUtil.generateTestCase();
+        Log.d("ISA", "Loadded test case from file!");
+        Log.d("ISA", "Executing it...");
+        testCase.executeBefore();
+        testCase.executeTest();
+        Boolean eval = testCase.evaluate();
+        testCase.executeAfter();
+        if (eval == false){
+            RandomReparationSearch randomReparationSearch = new RandomReparationSearch(5, testCase, testCase.getAppPackage());
+            testCase = randomReparationSearch.run(device, testCase.getAppPackage());
+        }
+        Log.d("ISA", "TestCase found: " + testCase);
+    }
+
+
+    @Test
+    public void testGRASPReparation() throws UiObjectNotFoundException {
         UiDevice device = UiDevice.getInstance(getInstrumentation());
         ReadUtil readUtil = new ReadUtil("TestCase-20190328_142649.txt", false);
         TestCase testCase = readUtil.generateTestCase();
