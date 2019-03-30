@@ -2,7 +2,7 @@ package esadrcanfer.us.alumno.autotesting;
 
 import androidx.test.uiautomator.UiObjectNotFoundException;
 
-public class BrokenTestCaseException extends  Exception {
+public class BrokenTestCaseException extends  RuntimeException {
 
     private TestCase brokenTestCase;
 

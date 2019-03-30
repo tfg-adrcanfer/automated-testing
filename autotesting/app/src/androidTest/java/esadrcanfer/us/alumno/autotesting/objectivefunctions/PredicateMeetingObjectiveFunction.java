@@ -1,6 +1,7 @@
 package esadrcanfer.us.alumno.autotesting.objectivefunctions;
 
 import androidx.test.uiautomator.UiObjectNotFoundException;
+import esadrcanfer.us.alumno.autotesting.BrokenTestCaseException;
 import esadrcanfer.us.alumno.autotesting.TestCase;
 
 public class PredicateMeetingObjectiveFunction implements ObjectiveFunction {
@@ -13,7 +14,9 @@ public class PredicateMeetingObjectiveFunction implements ObjectiveFunction {
             testcase.executeTest();
             result = new Double(testcase.getPredicate().nClausesMeet(testcase));
             testcase.executeAfter();
-        }catch(UiObjectNotFoundException ex){
+        }catch(BrokenTestCaseException ex){
+            return null;
+        } catch (UiObjectNotFoundException e) {
             return null;
         }
         return result;

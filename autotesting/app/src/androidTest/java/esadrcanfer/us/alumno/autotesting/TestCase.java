@@ -83,13 +83,17 @@ public class TestCase {
             a.perform();
     }
 
-    public void executeTest(){
+    public void executeTest() {
+        int index=0;
+        Action a;
         try{
-            for(Action a:testActions) {
+
+            for(index=0;index<testActions.size();index++) {
+                a=testActions.get(index);
                 a.perform();
             }
         } catch (UiObjectNotFoundException e){
-
+            throw new BrokenTestCaseException(e.getLocalizedMessage(),this,index);
         }
     }
 

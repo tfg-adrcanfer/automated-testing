@@ -15,7 +15,7 @@ public class PredicateEvaluator {
     private ExpressionParser expressionParser=new SpelExpressionParser();
     public boolean evaluate(TestCase testCase) throws IllegalArgumentException {
         boolean result = false;
-        Expression exp = expressionParser.parseExpression(testCase.getPredicate());
+        Expression exp = expressionParser.parseExpression(testCase.getPredicate().toString());
         EvaluationContext context = new StandardEvaluationContext(testCase);
         Object assertionResult = exp.getValue(context);
         if (assertionResult instanceof Boolean) {

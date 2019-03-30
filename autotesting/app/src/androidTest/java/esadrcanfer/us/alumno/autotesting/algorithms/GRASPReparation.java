@@ -14,6 +14,7 @@ import esadrcanfer.us.alumno.autotesting.inagraph.CloseAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.StartAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
 import esadrcanfer.us.alumno.autotesting.objectivefunctions.ObjectiveFunction;
+import esadrcanfer.us.alumno.autotesting.objectivefunctions.PredicateMeetingObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 
 public class GRASPReparation extends BaseReparationAlgorithm {
@@ -61,16 +62,22 @@ public class GRASPReparation extends BaseReparationAlgorithm {
         for(int i=breakingPoint+1;i<buggyTestCase.getTestActions().size();i++)
             actionsAfterBreakingPoint.add(buggyTestCase.getTestActions().get(i));
 
+        if(random==null)
+            random=new Random();
+        if(objectiveFunction==null)
+            objectiveFunction=new PredicateMeetingObjectiveFunction();
         this.breakingPoint=breakingPoint;
+        this.bugTestCase=buggyTestCase;
         return run(device,appPackage);
     }
 
     public TestCase run(UiDevice device, String appPackage) throws UiObjectNotFoundException {
         List<Action> testCaseActions;
         WriterUtil writerUtil = null;
-        Action chosenAction;
         TestCase res = null;
         Double currentEvaluation;
+        optimum=bugTestCase;
+        currentOptimum=null;
         for (int iterations=0;iterations< maxIterations;iterations++) {
             Log.d("ISA", "Running iteration " + (iterations + 1));
             res = creationPhase(device, appPackage);
@@ -107,16 +114,23 @@ public class GRASPReparation extends BaseReparationAlgorithm {
     public TestCase creationPhase(UiDevice device, String appPackage) throws UiObjectNotFoundException {
         // Initialization
         TestCase result=null;
+        startApp(appPackage);
         List<Action> testCaseActions=new ArrayList<>();
+        for(Action a:previousValidTestActions) {
+            testCaseActions.add(a);
+            a.perform();
+        }
         List<Action> availableActions;
         List<Action> RCL;
+        Action chosenAction;
         // Main Loop:
-        startApp(appPackage);
         int creationIterations=0;
-        while(testActions.size()<bugTestCase.getTestActions().size() && creationIterations<maxCreationIterations) {
+        while(testCaseActions.size()<bugTestCase.getTestActions().size() && creationIterations<maxCreationIterations) {
             availableActions = identifyAvailableActions(device);
             RCL = chooseRestrictedCandidatesList(device,availableActions);
-            testCaseActions.add(chooseRandomAction(RCL));
+            chosenAction=chooseRandomAction(RCL);
+            testCaseActions.add(chosenAction);
+            chosenAction.perform();
             creationIterations++;
         }
         List<String> finalState = labelsDetection();

@@ -16,8 +16,10 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
+import esadrcanfer.us.alumno.autotesting.BrokenTestCaseException;
 import esadrcanfer.us.alumno.autotesting.TestCase;
 import esadrcanfer.us.alumno.autotesting.algorithms.DynamicRandomSearch;
+import esadrcanfer.us.alumno.autotesting.algorithms.GRASPReparation;
 import esadrcanfer.us.alumno.autotesting.algorithms.RandomReparationSearch;
 import esadrcanfer.us.alumno.autotesting.inagraph.CloseAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.StartAppAction;
@@ -40,15 +42,22 @@ public class AutomaticRepairTests {
         TestCase testCase = readUtil.generateTestCase();
         Log.d("ISA", "Loadded test case from file!");
         Log.d("ISA", "Executing it...");
-        testCase.executeBefore();
-        testCase.executeTest();
-        Boolean eval = testCase.evaluate();
-        testCase.executeAfter();
-        if (eval == false){
-            RandomReparationSearch randomReparationSearch = new RandomReparationSearch(5, testCase, testCase.getAppPackage());
-            testCase = randomReparationSearch.run(device, testCase.getAppPackage());
+        try {
+            testCase.executeBefore();
+            testCase.executeTest();
+            Boolean eval = testCase.evaluate();
+            testCase.executeAfter();
+        }catch (BrokenTestCaseException ex){
+            testCase.executeAfter();
+            Log.d("ISA", "The test case is broken at step "+ex.getBreakingIndex()+"with message '"+ex.getMessage()+"'");
+            Log.d("ISA", "Repairing it...");
+            /*RandomReparationSearch randomReparationSearch = new RandomReparationSearch(5, testCase, testCase.getAppPackage());
+            testCase = randomReparationSearch.run(device, testCase.getAppPackage());*/
+            GRASPReparation grasp=new GRASPReparation(5,3,0);
+            testCase=grasp.repair(device,testCase,(int)ex.getBreakingIndex());
+            Log.d("ISA", "Repaired testCase found: " + testCase);
+            Log.d("ISA", "Repaired testCase evaluated to: " + testCase.evaluate());
         }
-        Log.d("ISA", "TestCase found: " + testCase);
     }
 
     @Test
