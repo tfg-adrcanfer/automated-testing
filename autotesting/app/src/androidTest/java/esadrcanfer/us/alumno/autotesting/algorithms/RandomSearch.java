@@ -68,7 +68,7 @@ public class RandomSearch {
             testActions.add(chosenAction);
             graph.fictitiousPerformAction(chosenAction);
         }
-        return new TestCase(app, Collections.EMPTY_SET,beforeActions,testActions,afterActions, new ArrayList<>());
+        return new TestCase(app, Collections.EMPTY_SET,beforeActions,testActions,afterActions, new ArrayList<>(), new ArrayList<>());
     }
 
     public Random getRandom(){

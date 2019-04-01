@@ -16,13 +16,12 @@ import esadrcanfer.us.alumno.autotesting.inagraph.CloseAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.StartAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.dynamic.DynamicObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 
 import static android.os.SystemClock.sleep;
 import static esadrcanfer.us.alumno.autotesting.tests.AutomaticRepairTests.labelsDetection;
 
-public class RandomReparationSearch {
+public class RecycleReparationSearch {
 
     long maxIterations;
     List<Action> beforeActions;
@@ -31,7 +30,7 @@ public class RandomReparationSearch {
     TestCase bugTestCase;
     Random random;
 
-    public RandomReparationSearch(long maxIterations, TestCase bugTestCase, String appPackage) {
+    public RecycleReparationSearch(long maxIterations, TestCase bugTestCase, String appPackage) {
         this.maxIterations = maxIterations;
         this.bugTestCase = bugTestCase;
         beforeActions = new ArrayList<>();
@@ -49,6 +48,7 @@ public class RandomReparationSearch {
         Action chosenAction;
         TestCase res = null;
         Boolean eval = false;
+        List<Action> validActions = getValidActions();
         while (i < maxIterations) {
             Log.d("ISA", "Running iteration " + (i + 1));
             Random chosenSeed = new Random();
@@ -91,6 +91,28 @@ public class RandomReparationSearch {
         */
 
         return res;
+    }
+
+    private List<Action> getValidActions() {
+        List<Action> validActions = new ArrayList<>();
+        try {
+            bugTestCase.executeBefore();
+        } catch (UiObjectNotFoundException e) {
+        }
+        for(Action a: bugTestCase.getTestActions()){
+            try{
+                a.perform();
+                validActions.add(a);
+            } catch (UiObjectNotFoundException e) {
+                break;
+            }
+        }
+        try {
+            bugTestCase.executeAfter();
+        } catch (UiObjectNotFoundException e) {
+        }
+
+        return validActions;
     }
 
     private List<Action> createAction(UiDevice device, Integer seed) {

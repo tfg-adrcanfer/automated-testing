@@ -115,6 +115,7 @@ public class GRASPReparation extends BaseReparationAlgorithm {
         // Initialization
         TestCase result=null;
         startApp(appPackage);
+        List<String> initialState = labelsDetection();
         List<Action> testCaseActions=new ArrayList<>();
         for(Action a:previousValidTestActions) {
             testCaseActions.add(a);
@@ -148,7 +149,7 @@ public class GRASPReparation extends BaseReparationAlgorithm {
             availableActions = createAction(device, seeds.nextInt());
         }*/
         // Reporting and results creation:
-        result = new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, finalState);
+        result = new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, initialState, finalState);
         result.setPredicate(bugTestCase.getPredicate());
         return result;
     }

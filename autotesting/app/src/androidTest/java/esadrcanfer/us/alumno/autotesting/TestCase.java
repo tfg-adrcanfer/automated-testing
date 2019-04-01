@@ -17,6 +17,7 @@ public class TestCase {
     List<Action> beforeActions;
     List<Action> testActions;
     List<Action> afterActions;
+    List<String> initialState;
     List<String> finalState;
     TestPredicate predicate;
 
@@ -35,17 +36,19 @@ public class TestCase {
         this.afterActions=new ArrayList<>();
         this.afterActions.addAll(baseCase.afterActions);
 
+        this.initialState = new ArrayList<>();
         this.finalState=new ArrayList<>();
 
         this.predicate=baseCase.predicate;
     }
 
-    public TestCase(String app, Set<String> exceutionContext, List<Action> beforeActions, List<Action> testActions, List<Action> afterActions, List<String> finalState) {
+    public TestCase(String app, Set<String> exceutionContext, List<Action> beforeActions, List<Action> testActions, List<Action> afterActions, List<String> initialState, List<String> finalState) {
         this.app = app;
         this.executionContext = exceutionContext;
         this.beforeActions = beforeActions;
         this.testActions = testActions;
         this.afterActions = afterActions;
+        this.initialState = initialState;
         this.finalState = finalState;
     }
 
@@ -113,8 +116,16 @@ public class TestCase {
         return new ArrayList<>(testActions);
     }
 
+    public List<String> getInitialState(){
+        return new ArrayList<>(initialState);
+    }
+
     public List<String> getFinalState(){
         return new ArrayList<>(finalState);
+    }
+
+    public void setInitialState(List<String> initialState){
+        this.initialState = initialState;
     }
 
     public void setFinalState(List<String> finalState){
