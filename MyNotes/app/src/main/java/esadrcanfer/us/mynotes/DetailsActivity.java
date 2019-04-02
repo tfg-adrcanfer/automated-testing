@@ -36,4 +36,8 @@ public class DetailsActivity extends AppCompatActivity {
         Intent intent = new Intent(view.getContext(), MainActivity.class);
         startActivityForResult(intent, 0);
     }
+
+    public void cancel(View view) {
+        finish();
+    }
 }

@@ -24,4 +24,8 @@ public class CreateNoteActivity extends AppCompatActivity {
             finish();
         }
     }
+
+    public void cancel(View view) {
+        finish();
+    }
 }

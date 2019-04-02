@@ -44,10 +44,19 @@
         android:text="Save"
         android:onClick="save"/>
 
-    <Button android:id="@+id/button2"
+
+    <Button android:id="@+id/button3"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/button"
+        android:text="Cancel"
+        android:onClick="cancel"/>
+
+
+    <Button android:id="@+id/button2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button3"
         android:text="Delete"
         android:onClick="delete"/>
 </RelativeLayout>
