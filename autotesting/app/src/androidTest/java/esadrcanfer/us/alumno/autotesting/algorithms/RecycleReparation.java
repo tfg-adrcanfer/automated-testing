@@ -16,13 +16,12 @@ import esadrcanfer.us.alumno.autotesting.inagraph.CloseAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.StartAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.ActionFactory;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.dynamic.DynamicObjectiveFunction;
 import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 
 import static android.os.SystemClock.sleep;
 import static esadrcanfer.us.alumno.autotesting.tests.AutomaticRepairTests.labelsDetection;
 
-public class RandomReparationSearch {
+public class RecycleReparation {
 
     long maxIterations;
     List<Action> beforeActions;
@@ -30,32 +29,42 @@ public class RandomReparationSearch {
     List<Action> testActions;
     TestCase bugTestCase;
     Random random;
+    int breakingPoint;
 
-    public RandomReparationSearch(long maxIterations, TestCase bugTestCase, String appPackage) {
+    public RecycleReparation(long maxIterations, TestCase bugTestCase, int breakingPoint) {
         this.maxIterations = maxIterations;
         this.bugTestCase = bugTestCase;
         beforeActions = new ArrayList<>();
-        beforeActions.add(new StartAppAction(appPackage));
+        beforeActions.add(new StartAppAction(bugTestCase.getAppPackage()));
         afterActions = new ArrayList<>();
-        afterActions.add(new CloseAppAction(appPackage));
+        afterActions.add(new CloseAppAction(bugTestCase.getAppPackage()));
         testActions = new ArrayList<>();
+        this.breakingPoint = breakingPoint;
     }
 
-    public TestCase run(UiDevice device, String appPackage) throws UiObjectNotFoundException {
-        int i = 0;
+    public TestCase run(UiDevice device) throws UiObjectNotFoundException {
+
         List<Action> testCaseActions;
         List<Action> availableActions;
         WriterUtil writerUtil = null;
         Action chosenAction;
         TestCase res = null;
         Boolean eval = false;
+        List<Action> validActions = new ArrayList<>();
+        for(int i=0;i<breakingPoint;i++)
+            validActions.add(bugTestCase.getTestActions().get(i));
+        int i = 0;
+
         while (i < maxIterations) {
             Log.d("ISA", "Running iteration " + (i + 1));
             Random chosenSeed = new Random();
             Long seed = chosenSeed.nextLong();
             Random seeds = new Random(seed);
-            startApp(appPackage);
-            testCaseActions = new ArrayList<>();
+            startApp(bugTestCase.getAppPackage());
+            testCaseActions = new ArrayList<>(validActions);
+            for (Action a: testCaseActions){
+                a.perform();
+            }
             availableActions = createAction(device, seeds.nextInt());
             List<String> initialState = labelsDetection();
             while (testCaseActions.size() < bugTestCase.getTestActions().size() && availableActions.size() > 0) {
@@ -64,14 +73,14 @@ public class RandomReparationSearch {
                 Log.d("ISA", "Executing action: " + chosenAction);
                 chosenAction.perform();
                 String appName = UiDevice.getInstance().getCurrentPackageName();
-                if (!appName.equals(appPackage)) {
+                if (!appName.equals(bugTestCase.getAppPackage())) {
                     break;
                 }
                 availableActions = createAction(device, seeds.nextInt());
             }
             List<String> finalState = labelsDetection();
-            closeApp(appPackage);
-            res = new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, initialState, finalState);
+            closeApp(bugTestCase.getAppPackage());
+            res = new TestCase(bugTestCase.getAppPackage(), Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, initialState, finalState);
             res.setPredicate(bugTestCase.getPredicate());
             eval = res.evaluate();
             sleep(2000);
