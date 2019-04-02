@@ -17,7 +17,8 @@ import androidx.test.uiautomator.UiObjectNotFoundException;
 import esadrcanfer.us.alumno.autotesting.BrokenTestCaseException;
 import esadrcanfer.us.alumno.autotesting.TestCase;
 import esadrcanfer.us.alumno.autotesting.algorithms.GRASPReparation;
-import esadrcanfer.us.alumno.autotesting.algorithms.RandomReparationSearch;
+import esadrcanfer.us.alumno.autotesting.algorithms.RandomReparation;
+import esadrcanfer.us.alumno.autotesting.algorithms.RecycleReparation;
 import esadrcanfer.us.alumno.autotesting.inagraph.CloseAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.StartAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
@@ -32,22 +33,48 @@ public class AutomaticRepairTests {
     @Test
     public void testRandomReparation() throws UiObjectNotFoundException {
         UiDevice device = UiDevice.getInstance(getInstrumentation());
-        ReadUtil readUtil = new ReadUtil("Broken-CreationTestCase.txt", false);
+        ReadUtil readUtil = new ReadUtil("EditionTestCase.txt", false);
         TestCase testCase = readUtil.generateTestCase();
         Log.d("ISA", "Loadded test case from file!");
         Log.d("ISA", "Executing it...");
-        testCase.executeBefore();
-        List<String> initialState = labelsDetection();
-        testCase.executeTest();
-        List<String> finalState = labelsDetection();
-        testCase.setInitialState(initialState);
-        testCase.setFinalState(finalState);
-        Boolean eval = testCase.evaluate();
-        Log.d("ISA", "Initial evaluation: " + eval.toString());
-        testCase.executeAfter();
-        if (eval == false){
-            RandomReparationSearch randomReparationSearch = new RandomReparationSearch(5, testCase, testCase.getAppPackage());
-            testCase = randomReparationSearch.run(device, testCase.getAppPackage());
+        try {
+            testCase.executeBefore();
+            List<String> initialState = labelsDetection();
+            testCase.executeTest();
+            List<String> finalState = labelsDetection();
+            testCase.setInitialState(initialState);
+            testCase.setFinalState(finalState);
+            Boolean eval = testCase.evaluate();
+            Log.d("ISA", "Initial evaluation: " + eval.toString());
+            testCase.executeAfter();
+        } catch (BrokenTestCaseException ex) {
+            RandomReparation randomReparation = new RandomReparation(5, testCase, testCase.getAppPackage());
+            testCase = randomReparation.run(device, testCase.getAppPackage());
+        }
+        Log.d("ISA", "TestCase found: " + testCase);
+    }
+
+    @Test
+    public void testRecycleReparation() throws UiObjectNotFoundException {
+        UiDevice device = UiDevice.getInstance(getInstrumentation());
+        ReadUtil readUtil = new ReadUtil("TestCase-create.txt", false);
+        TestCase testCase = readUtil.generateTestCase();
+        Log.d("ISA", "Loadded test case from file!");
+        Log.d("ISA", "Executing it...");
+        try {
+            testCase.executeBefore();
+            List<String> initialState = labelsDetection();
+            testCase.executeTest();
+            List<String> finalState = labelsDetection();
+            testCase.setInitialState(initialState);
+            testCase.setFinalState(finalState);
+            Boolean eval = testCase.evaluate();
+            Log.d("ISA", "Initial evaluation: " + eval.toString());
+            testCase.executeAfter();
+        } catch (BrokenTestCaseException ex) {
+            testCase.executeAfter();
+            RecycleReparation recycleReparation = new RecycleReparation(5, testCase, (int) ex.getBreakingIndex());
+            testCase = recycleReparation.run(device);
         }
         Log.d("ISA", "TestCase found: " + testCase);
     }
@@ -69,14 +96,14 @@ public class AutomaticRepairTests {
             testCase.setFinalState(finalState);
             Boolean eval = testCase.evaluate();
             testCase.executeAfter();
-        }catch (BrokenTestCaseException ex){
+        } catch (BrokenTestCaseException ex) {
             testCase.executeAfter();
-            Log.d("ISA", "The test case is broken at step "+ex.getBreakingIndex()+"with message '"+ex.getMessage()+"'");
+            Log.d("ISA", "The test case is broken at step " + ex.getBreakingIndex() + "with message '" + ex.getMessage() + "'");
             Log.d("ISA", "Repairing it...");
             /*RandomReparationSearch randomReparationSearch = new RandomReparationSearch(5, testCase, testCase.getAppPackage());
             testCase = randomReparationSearch.run(device, testCase.getAppPackage());*/
-            GRASPReparation grasp=new GRASPReparation(5,3,0);
-            testCase=grasp.repair(device,testCase,(int)ex.getBreakingIndex());
+            GRASPReparation grasp = new GRASPReparation(5, 3, 0);
+            testCase = grasp.repair(device, testCase, (int) ex.getBreakingIndex());
             Log.d("ISA", "Repaired testCase found: " + testCase);
             Log.d("ISA", "Repaired testCase evaluated to: " + testCase.evaluate());
         }
@@ -87,7 +114,7 @@ public class AutomaticRepairTests {
         UiDevice.getInstance(getInstrumentation());
         //createTestCase();
         //editTestCase();
-        deleteTestCase();
+        //deleteTestCase();
     }
 
     public static TestCase createTestCase() throws UiObjectNotFoundException {
@@ -98,7 +125,8 @@ public class AutomaticRepairTests {
         Random random = new Random(seed);
         List<Action> beforeActions = new ArrayList<>();
         List<Action> afterActions = new ArrayList<>();
-        List<Action> testActions = new ArrayList<>();;
+        List<Action> testActions = new ArrayList<>();
+        ;
         beforeActions.add(new StartAppAction(appPackage));
         afterActions.add(new CloseAppAction(appPackage));
         Action createNoteButton = ReadUtil.generateActionFromSimpleString("BUTTON, UiSelector[RESOURCE_ID=esadrcanfer.us.mynotes:id/button]", random.nextInt());
@@ -107,7 +135,7 @@ public class AutomaticRepairTests {
         testActions.add(addNoteText);
         Action saveNoteButton = ReadUtil.generateActionFromSimpleString("BUTTON, UiSelector[RESOURCE_ID=esadrcanfer.us.mynotes:id/button]", random.nextInt());
         testActions.add(saveNoteButton);
-        TestCase testCase = new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions, new ArrayList<>(), new ArrayList<>());
+        TestCase testCase = new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testActions, afterActions, new ArrayList<>(), new ArrayList<>());
         testCase.executeBefore();
         List<String> initialState = labelsDetection();
         testCase.executeTest();
@@ -120,7 +148,7 @@ public class AutomaticRepairTests {
         writerUtil.write(appPackage);
         writerUtil.write(String.valueOf(seed));
         writerUtil.write(String.valueOf(testActions.size()));
-        for (Action action:testActions) {
+        for (Action action : testActions) {
             writerUtil.write(action.toString());
         }
         writerUtil.write(testCase.getPredicate().toString());
@@ -137,7 +165,8 @@ public class AutomaticRepairTests {
         Random random = new Random(seed);
         List<Action> beforeActions = new ArrayList<>();
         List<Action> afterActions = new ArrayList<>();
-        List<Action> testActions = new ArrayList<>();;
+        List<Action> testActions = new ArrayList<>();
+        ;
         beforeActions.add(new StartAppAction(appPackage));
         afterActions.add(new CloseAppAction(appPackage));
         Action createNoteButton = ReadUtil.generateActionFromSimpleString("BUTTON, UiSelector[RESOURCE_ID=esadrcanfer.us.mynotes:id/editButton]", random.nextInt());
@@ -146,7 +175,7 @@ public class AutomaticRepairTests {
         testActions.add(addNoteText);
         Action saveNoteButton = ReadUtil.generateActionFromSimpleString("BUTTON, UiSelector[RESOURCE_ID=esadrcanfer.us.mynotes:id/button]", random.nextInt());
         testActions.add(saveNoteButton);
-        TestCase testCase = new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions, new ArrayList<>(), new ArrayList<>());
+        TestCase testCase = new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testActions, afterActions, new ArrayList<>(), new ArrayList<>());
         testCase.executeBefore();
         List<String> initialState = labelsDetection();
         testCase.executeTest();
@@ -158,7 +187,7 @@ public class AutomaticRepairTests {
         writerUtil.write(appPackage);
         writerUtil.write(String.valueOf(seed));
         writerUtil.write(String.valueOf(testActions.size()));
-        for (Action action:testActions) {
+        for (Action action : testActions) {
             writerUtil.write(action.toString());
         }
         writerUtil.write(testCase.getPredicate().toString());
@@ -175,14 +204,15 @@ public class AutomaticRepairTests {
         Random random = new Random(seed);
         List<Action> beforeActions = new ArrayList<>();
         List<Action> afterActions = new ArrayList<>();
-        List<Action> testActions = new ArrayList<>();;
+        List<Action> testActions = new ArrayList<>();
+        ;
         beforeActions.add(new StartAppAction(appPackage));
         afterActions.add(new CloseAppAction(appPackage));
         Action createNoteButton = ReadUtil.generateActionFromSimpleString("BUTTON, UiSelector[RESOURCE_ID=esadrcanfer.us.mynotes:id/editButton]", random.nextInt());
         testActions.add(createNoteButton);
         Action saveNoteButton = ReadUtil.generateActionFromSimpleString("BUTTON, UiSelector[RESOURCE_ID=esadrcanfer.us.mynotes:id/button2]", random.nextInt());
         testActions.add(saveNoteButton);
-        TestCase testCase = new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions, new ArrayList<>(), new ArrayList<>());
+        TestCase testCase = new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testActions, afterActions, new ArrayList<>(), new ArrayList<>());
         testCase.executeBefore();
         List<String> initialState = labelsDetection();
         testCase.executeTest();
@@ -195,7 +225,7 @@ public class AutomaticRepairTests {
         writerUtil.write(appPackage);
         writerUtil.write(String.valueOf(seed));
         writerUtil.write(String.valueOf(testActions.size()));
-        for (Action action:testActions) {
+        for (Action action : testActions) {
             writerUtil.write(action.toString());
         }
         writerUtil.write(testCase.getPredicate().toString());
@@ -208,13 +238,11 @@ public class AutomaticRepairTests {
         UiDevice device = UiDevice.getInstance(getInstrumentation());
         List<String> finalState = new ArrayList<>();
         List<UiObject2> elements = device.findObjects(By.clazz(TextView.class));
-        Log.d("ISA", "Size: " + elements.size());
         for (UiObject2 label : elements) {
             String text = label.getText();
             //Solución básica, hay que mejorarla
-            if(!(text.contains(":") || text.contains("%"))) {
+            if (!(text.contains(":") || text.contains("%"))) {
                 finalState.add(text);
-                Log.d("ISA", "Label: " + label.getText());
             }
         }
         return finalState;
