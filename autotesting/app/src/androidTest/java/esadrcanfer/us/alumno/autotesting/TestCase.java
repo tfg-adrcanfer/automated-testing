@@ -17,9 +17,11 @@ public class TestCase {
     List<Action> beforeActions;
     List<Action> testActions;
     List<Action> afterActions;
-    List<String> initialState;
-    List<String> finalState;
     TestPredicate predicate;
+
+    List<String> initialState;
+
+    List<String> finalState;
 
     public TestCase(TestCase baseCase){
         this.app=baseCase.app;

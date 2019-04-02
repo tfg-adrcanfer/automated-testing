@@ -88,16 +88,17 @@ public class ReadUtil {
             }
         }
         String predicate = lines[actionsSize+1];
+        List<String> initialLabels = new ArrayList<>();
+        /*
         String initialState = lines[actionsSize+2].replaceAll("\\[", "").replaceAll("\\]", "");
         String finalState = lines[actionsSize+3].replaceAll("\\[", "").replaceAll("\\]", "");
-        List<String> initialLabels = new ArrayList<>();
         for (String label: initialState.split(", ")) {
             initialLabels.add(label);
-        }
+        }*/
         List<String> finalLabels = new ArrayList<>();
-        for (String label: finalState.split(", ")) {
+        /*for (String label: finalState.split(", ")) {
             finalLabels.add(label);
-        }
+        }*/
         beforeActions.add(new StartAppAction(appPackage));
         afterActions.add(new CloseAppAction(appPackage));
         TestCase testCase = new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions, initialLabels, finalLabels);

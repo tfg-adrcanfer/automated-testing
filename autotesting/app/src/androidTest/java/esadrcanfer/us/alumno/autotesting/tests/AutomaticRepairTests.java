@@ -32,7 +32,7 @@ public class AutomaticRepairTests {
     @Test
     public void testRandomReparation() throws UiObjectNotFoundException {
         UiDevice device = UiDevice.getInstance(getInstrumentation());
-        ReadUtil readUtil = new ReadUtil("TestCase-delete.txt", false);
+        ReadUtil readUtil = new ReadUtil("Broken-CreationTestCase.txt", false);
         TestCase testCase = readUtil.generateTestCase();
         Log.d("ISA", "Loadded test case from file!");
         Log.d("ISA", "Executing it...");
@@ -56,7 +56,7 @@ public class AutomaticRepairTests {
     @Test
     public void testGRASPReparation() throws UiObjectNotFoundException {
         UiDevice device = UiDevice.getInstance(getInstrumentation());
-        ReadUtil readUtil = new ReadUtil("TestCase-20190328_142649.txt", false);
+        ReadUtil readUtil = new ReadUtil("Broken-CreationTestCase.txt", false);
         TestCase testCase = readUtil.generateTestCase();
         Log.d("ISA", "Loadded test case from file!");
         Log.d("ISA", "Executing it...");
@@ -124,8 +124,8 @@ public class AutomaticRepairTests {
             writerUtil.write(action.toString());
         }
         writerUtil.write(testCase.getPredicate().toString());
-        writerUtil.write(initialState.toString());
-        writerUtil.write(finalState.toString());
+        /*writerUtil.write(initialState.toString());
+        writerUtil.write(finalState.toString());*/
         return testCase;
     }
 
@@ -162,8 +162,8 @@ public class AutomaticRepairTests {
             writerUtil.write(action.toString());
         }
         writerUtil.write(testCase.getPredicate().toString());
-        writerUtil.write(initialState.toString());
-        writerUtil.write(finalState.toString());
+        /*writerUtil.write(initialState.toString());
+        writerUtil.write(finalState.toString());*/
         return testCase;
     }
 
@@ -199,8 +199,8 @@ public class AutomaticRepairTests {
             writerUtil.write(action.toString());
         }
         writerUtil.write(testCase.getPredicate().toString());
-        writerUtil.write(initialState.toString());
-        writerUtil.write(finalState.toString());
+        /*writerUtil.write(initialState.toString());
+        writerUtil.write(finalState.toString());*/
         return testCase;
     }
 
