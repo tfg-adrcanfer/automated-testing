@@ -37,11 +37,15 @@ public abstract class BaseReparationAlgorithm implements ReparationAlgorithm {
         List<UiObject2> elements = device.findObjects(By.clazz(TextView.class));
         Log.d("ISA", "Size: " + elements.size());
         for (UiObject2 label : elements) {
-            String text = label.getText();
-            //Solución básica, hay que mejorarla
-            if(!(text.contains(":") || text.contains("%"))) {
-                finalState.add(text);
-                Log.d("ISA", "Label: " + label.getText());
+            try {
+                String text = label.getText();
+                //Solución básica, hay que mejorarla
+                if (!(text.contains(":") || text.contains("%"))) {
+                    finalState.add(text);
+                    Log.d("ISA", "Label: " + label.getText());
+                }
+            }catch(Exception e){
+                System.out.println(e.getLocalizedMessage());
             }
         }
         return finalState;

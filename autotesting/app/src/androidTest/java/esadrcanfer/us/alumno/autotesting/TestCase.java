@@ -115,15 +115,15 @@ public class TestCase {
     }
 
     public List<Action> getTestActions(){
-        return new ArrayList<>(testActions);
+        return testActions;
     }
 
     public List<String> getInitialState(){
-        return new ArrayList<>(initialState);
+        return initialState;
     }
 
     public List<String> getFinalState(){
-        return new ArrayList<>(finalState);
+        return finalState;
     }
 
     public void setInitialState(List<String> initialState){
@@ -161,6 +161,7 @@ public class TestCase {
         }
         return res;
     }
+
 
 
     public Set<String> getExceutionContext() {

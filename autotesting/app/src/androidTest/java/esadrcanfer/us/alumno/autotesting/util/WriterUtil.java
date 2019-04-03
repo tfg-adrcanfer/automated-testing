@@ -1,5 +1,7 @@
 package esadrcanfer.us.alumno.autotesting.util;
 
+
+import esadrcanfer.us.alumno.autotesting.TestCase;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
@@ -14,6 +16,8 @@ import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
+
 public class WriterUtil {
 	private File logFile;
 	
@@ -26,7 +30,17 @@ public class WriterUtil {
 	public File getLogFile() {
 		return logFile;
 	}
-	
+
+	public void write(TestCase testCase, int seed){
+		write(testCase.getAppPackage());
+		write(String.valueOf(seed));
+		write(String.valueOf(testCase.getTestActions().size()));
+		for (Action action : testCase.getTestActions()) {
+			write(action.toString());
+		}
+		write(testCase.getPredicate().toString());
+	}
+
 	public void write(String text) {
 		try {
 			if(!getLogFile().exists())

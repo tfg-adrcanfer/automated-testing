@@ -33,7 +33,7 @@ public class AutomaticRepairTests {
     @Test
     public void testRandomReparation() throws UiObjectNotFoundException {
         UiDevice device = UiDevice.getInstance(getInstrumentation());
-        ReadUtil readUtil = new ReadUtil("EditionTestCase.txt", false);
+        ReadUtil readUtil = new ReadUtil("Downloads/BrokenTest/Broken-CreationTest.txt", false);
         TestCase testCase = readUtil.generateTestCase();
         Log.d("ISA", "Loadded test case from file!");
         Log.d("ISA", "Executing it...");
@@ -83,7 +83,7 @@ public class AutomaticRepairTests {
     @Test
     public void testGRASPReparation() throws UiObjectNotFoundException {
         UiDevice device = UiDevice.getInstance(getInstrumentation());
-        ReadUtil readUtil = new ReadUtil("Broken-CreationTestCase.txt", false);
+        ReadUtil readUtil = new ReadUtil("Download/BrokenTest/Broken2-CreationTestCase.txt", false);
         TestCase testCase = readUtil.generateTestCase();
         Log.d("ISA", "Loadded test case from file!");
         Log.d("ISA", "Executing it...");
@@ -102,7 +102,7 @@ public class AutomaticRepairTests {
             Log.d("ISA", "Repairing it...");
             /*RandomReparationSearch randomReparationSearch = new RandomReparationSearch(5, testCase, testCase.getAppPackage());
             testCase = randomReparationSearch.run(device, testCase.getAppPackage());*/
-            GRASPReparation grasp = new GRASPReparation(5, 3, 0);
+            GRASPReparation grasp = new GRASPReparation(10, 3, 5);
             testCase = grasp.repair(device, testCase, (int) ex.getBreakingIndex());
             Log.d("ISA", "Repaired testCase found: " + testCase);
             Log.d("ISA", "Repaired testCase evaluated to: " + testCase.evaluate());
@@ -145,13 +145,7 @@ public class AutomaticRepairTests {
         testCase.setFinalState(finalState);
         testCase.setPredicate("finalState.contains(testActions[1].value)");
         WriterUtil writerUtil = new WriterUtil();
-        writerUtil.write(appPackage);
-        writerUtil.write(String.valueOf(seed));
-        writerUtil.write(String.valueOf(testActions.size()));
-        for (Action action : testActions) {
-            writerUtil.write(action.toString());
-        }
-        writerUtil.write(testCase.getPredicate().toString());
+        writerUtil.write(testCase,seed);
         /*writerUtil.write(initialState.toString());
         writerUtil.write(finalState.toString());*/
         return testCase;
@@ -184,13 +178,7 @@ public class AutomaticRepairTests {
         testCase.setFinalState(finalState);
         testCase.setPredicate("finalState.contains(testActions[1].value)");
         WriterUtil writerUtil = new WriterUtil();
-        writerUtil.write(appPackage);
-        writerUtil.write(String.valueOf(seed));
-        writerUtil.write(String.valueOf(testActions.size()));
-        for (Action action : testActions) {
-            writerUtil.write(action.toString());
-        }
-        writerUtil.write(testCase.getPredicate().toString());
+        writerUtil.write(testCase,seed);
         /*writerUtil.write(initialState.toString());
         writerUtil.write(finalState.toString());*/
         return testCase;
@@ -222,13 +210,7 @@ public class AutomaticRepairTests {
         testCase.setFinalState(finalState);
         testCase.setPredicate("finalState.size() < initialState.size()");
         WriterUtil writerUtil = new WriterUtil();
-        writerUtil.write(appPackage);
-        writerUtil.write(String.valueOf(seed));
-        writerUtil.write(String.valueOf(testActions.size()));
-        for (Action action : testActions) {
-            writerUtil.write(action.toString());
-        }
-        writerUtil.write(testCase.getPredicate().toString());
+        writerUtil.write(testCase,seed);
         /*writerUtil.write(initialState.toString());
         writerUtil.write(finalState.toString());*/
         return testCase;
@@ -241,7 +223,7 @@ public class AutomaticRepairTests {
         for (UiObject2 label : elements) {
             String text = label.getText();
             //Solución básica, hay que mejorarla
-            if (!(text.contains(":") || text.contains("%"))) {
+            if (text!=null && (!(text.contains(":") || text.contains("%")))) {
                 finalState.add(text);
             }
         }

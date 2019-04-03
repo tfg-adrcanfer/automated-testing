@@ -13,11 +13,14 @@ public class PredicateMeetingObjectiveFunction implements ObjectiveFunction {
             testcase.executeBefore();
             testcase.executeTest();
             result = new Double(testcase.getPredicate().nClausesMeet(testcase));
-            testcase.executeAfter();
         }catch(BrokenTestCaseException ex){
-            return null;
         } catch (UiObjectNotFoundException e) {
-            return null;
+        }finally {
+            try {
+                testcase.executeAfter();
+            } catch (UiObjectNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         return result;
     }

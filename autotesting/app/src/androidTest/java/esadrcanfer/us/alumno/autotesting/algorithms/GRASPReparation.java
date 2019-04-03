@@ -3,13 +3,18 @@ package esadrcanfer.us.alumno.autotesting.algorithms;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.uiautomator.UiSelector;
 import esadrcanfer.us.alumno.autotesting.TestCase;
+import esadrcanfer.us.alumno.autotesting.TestPredicate;
 import esadrcanfer.us.alumno.autotesting.inagraph.CloseAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.StartAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
@@ -22,6 +27,9 @@ public class GRASPReparation extends BaseReparationAlgorithm {
     int maxIterations;
     int maxCreationIterations;
     int maxImprovementIterations;
+    int objectiveFunctionEvaluations;
+    Long executionTime;
+    long startInstant;
     List<Action> beforeActions;
     List<Action> afterActions;
     List<Action> testActions;
@@ -32,6 +40,7 @@ public class GRASPReparation extends BaseReparationAlgorithm {
     Random random;
     TestCase optimum;
     Double currentOptimum;
+    Double currentEvaluation;
 
     ObjectiveFunction objectiveFunction;
 
@@ -47,12 +56,14 @@ public class GRASPReparation extends BaseReparationAlgorithm {
 
     @Override
     public TestCase repair(UiDevice device, TestCase buggyTestCase, int breakingPoint) throws UiObjectNotFoundException {
+        startInstant=System.currentTimeMillis();
         String appPackage=buggyTestCase.getAppPackage();
         beforeActions = new ArrayList<>();
         beforeActions.add(new StartAppAction(appPackage));
         afterActions = new ArrayList<>();
         afterActions.add(new CloseAppAction(appPackage));
         testActions = new ArrayList<>();
+        objectiveFunctionEvaluations=0;
 
         previousValidTestActions=new ArrayList<>();
         for(int i=0;i<breakingPoint;i++)
@@ -72,16 +83,13 @@ public class GRASPReparation extends BaseReparationAlgorithm {
     }
 
     public TestCase run(UiDevice device, String appPackage) throws UiObjectNotFoundException {
-        List<Action> testCaseActions;
         WriterUtil writerUtil = null;
         TestCase res = null;
-        Double currentEvaluation;
         optimum=bugTestCase;
         currentOptimum=null;
         for (int iterations=0;iterations< maxIterations;iterations++) {
             Log.d("ISA", "Running iteration " + (iterations + 1));
             res = creationPhase(device, appPackage);
-            currentEvaluation=objectiveFunction.evaluate(res,res.getAppPackage());
             Log.d("ISA", "Evaluation at creation: " + currentEvaluation);
             if (currentEvaluation!=null && (currentOptimum==null || currentEvaluation>=currentOptimum)){
                 optimum=res;
@@ -90,7 +98,6 @@ public class GRASPReparation extends BaseReparationAlgorithm {
             if(optimum.getPredicate().getNClauses()==currentOptimum)
                 break;
             res = improvementPhase(device,res);
-            currentEvaluation = objectiveFunction.evaluate(res,res.getAppPackage());
             Log.d("ISA", "Eval at improvement: " + currentEvaluation);
             if (currentEvaluation!=null && (currentOptimum==null || currentEvaluation>=currentOptimum)){
                     optimum=res;
@@ -107,7 +114,7 @@ public class GRASPReparation extends BaseReparationAlgorithm {
                 writerUtil.write(a.toString());
             }
         */
-
+        executionTime=System.currentTimeMillis()-startInstant;
         return res;
     }
 
@@ -116,9 +123,9 @@ public class GRASPReparation extends BaseReparationAlgorithm {
         TestCase result=null;
         startApp(appPackage);
         List<String> initialState = labelsDetection();
-        List<Action> testCaseActions=new ArrayList<>();
+        testActions=new ArrayList<>();
         for(Action a:previousValidTestActions) {
-            testCaseActions.add(a);
+            testActions.add(a);
             a.perform();
         }
         List<Action> availableActions;
@@ -126,11 +133,11 @@ public class GRASPReparation extends BaseReparationAlgorithm {
         Action chosenAction;
         // Main Loop:
         int creationIterations=0;
-        while(testCaseActions.size()<bugTestCase.getTestActions().size() && creationIterations<maxCreationIterations) {
+        while(testActions.size()<bugTestCase.getTestActions().size() && creationIterations<maxCreationIterations) {
             availableActions = identifyAvailableActions(device);
-            RCL = chooseRestrictedCandidatesList(device,availableActions);
+            RCL = chooseRestrictedCandidatesList(device,availableActions,testActions);
             chosenAction=chooseRandomAction(RCL);
-            testCaseActions.add(chosenAction);
+            testActions.add(chosenAction);
             chosenAction.perform();
             creationIterations++;
         }
@@ -149,8 +156,10 @@ public class GRASPReparation extends BaseReparationAlgorithm {
             availableActions = createAction(device, seeds.nextInt());
         }*/
         // Reporting and results creation:
-        result = new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, initialState, finalState);
+        result = new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testActions, afterActions, initialState, finalState);
         result.setPredicate(bugTestCase.getPredicate());
+        currentEvaluation=Double.valueOf(result.getPredicate().nClausesMeet(result));
+        objectiveFunctionEvaluations++;
         return result;
     }
 
@@ -158,16 +167,30 @@ public class GRASPReparation extends BaseReparationAlgorithm {
         return createAction(device, random.nextInt());
     }
 
-    public List<Action> chooseRestrictedCandidatesList(UiDevice device,List<Action> availableActions) {
+    public List<Action> chooseRestrictedCandidatesList(UiDevice device,List<Action> availableActions,List<Action> testCaseActions) {
         List<Action> RCL=new ArrayList<>();
 
         for(Action candidate:availableActions){
-            if(actionsAfterBreakingPoint.contains(candidate) && !testActions.contains(candidate))
+            if(containsActionOnObject(actionsAfterBreakingPoint,candidate) && !containsActionOnObject(testCaseActions,candidate))
                 RCL.add(candidate);
         }
         if(RCL.isEmpty())
             RCL.addAll(availableActions);
         return RCL;
+    }
+
+    public boolean containsActionOnObject(List<Action> actions, Action candidate){
+        String target=candidate.getTarget().getSelector().toString();
+        boolean result=false;
+        if(target!=null) {
+            for (Action action : actions) {
+                if (target.equals(action.getTarget().getSelector().toString())) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
 
@@ -187,18 +210,21 @@ public class GRASPReparation extends BaseReparationAlgorithm {
 
     public TestCase additionImprovement(UiDevice device, int index,TestCase inputTestCase) throws UiObjectNotFoundException {
         TestCase result=inputTestCase;
-        Double optimum=objectiveFunction.evaluate(result,result.getAppPackage());
+        Double localOptimum=objectiveFunction.evaluate(result,result.getAppPackage());
         Double candidateEvaluation;
         executeUntil(device,index,inputTestCase);
         List<Action> availableActions=identifyAvailableActions(device);
+        closeApp(inputTestCase.getAppPackage());
         List<TestCase> feasibleAdditions=findFeasibleAdditons(device,index, inputTestCase,availableActions);
         for(TestCase addition:feasibleAdditions){
             candidateEvaluation=objectiveFunction.evaluate(addition,addition.getAppPackage());
-            if(candidateEvaluation!=null && candidateEvaluation>=optimum) {
+            objectiveFunctionEvaluations++;
+            if(candidateEvaluation!=null && candidateEvaluation>=localOptimum) {
                 result=addition;
-                optimum=candidateEvaluation;
+                localOptimum=candidateEvaluation;
             }
         }
+        currentEvaluation=localOptimum;
         return result;
 
     }
@@ -212,11 +238,46 @@ public class GRASPReparation extends BaseReparationAlgorithm {
 
     public List<TestCase> findFeasibleAdditons(UiDevice device,int index,TestCase inputTestCase, List<Action> availableActions){
         List<TestCase> result=new ArrayList<>();
+        TestPredicate adaptedPredicate=adaptPredicateAdditionAt(inputTestCase,index);
         TestCase testCase;
         for(Action action:availableActions){
             testCase=new TestCase(inputTestCase);
             testCase.getTestActions().add(index,action);
+            testCase.setPredicate(adaptedPredicate);
             result.add(testCase);
+        }
+        return result;
+    }
+
+    public TestPredicate adaptPredicateAdditionAt(TestCase originaltest, int index){
+        String [] clauses=originaltest.getPredicate().toString().split("&&");
+        List<String> adaptedClauses=new ArrayList<>(clauses.length);
+        for(String clause:clauses){
+            adaptedClauses.add(adaptClauseAdditionAt(clause,index,originaltest.getTestActions().size()));
+        }
+        return new TestPredicate(adaptedClauses);
+    }
+
+    public String adaptClauseAdditionAt(String clause, int index,int totalActions){
+        String result=clause;
+        for(int i=totalActions-1;i>=index;i--){
+            result=result.replace("testActions["+i+"]","testActions["+(i+1)+"]");
+        }
+        return result;
+    }
+
+    public TestPredicate adaptPredicateRemovalAt(TestCase originaltest, int index){
+        String [] clauses=originaltest.getPredicate().toString().split("&&");
+        List<String> adaptedClauses=new ArrayList<>(clauses.length);
+        for(String clause:clauses){
+            adaptedClauses.add(adaptClauseRemovalAt(clause,index,originaltest.getTestActions().size()));
+        }
+        return new TestPredicate(adaptedClauses);
+    }
+    public String adaptClauseRemovalAt(String clause, int index,int totalActions){
+        String result=clause;
+        for(int i=index;i<totalActions;i++){
+            result=result.replace("testActions["+i+"]","testActions["+(i-1)+"]");
         }
         return result;
     }
@@ -224,6 +285,7 @@ public class GRASPReparation extends BaseReparationAlgorithm {
     public TestCase removalImprovement(UiDevice device,int index,TestCase inputTestCase) throws UiObjectNotFoundException {
         TestCase newTestCase=new TestCase(inputTestCase);
         newTestCase.getTestActions().remove(index);
+        newTestCase.setPredicate(adaptPredicateRemovalAt(inputTestCase,index));
         Double evaluation=objectiveFunction.evaluate(newTestCase,newTestCase.getAppPackage());
         if(evaluation!=null){
             return newTestCase;
@@ -238,5 +300,7 @@ public class GRASPReparation extends BaseReparationAlgorithm {
         return actions.get(random.nextInt(actions.size()));
     }
 
-
+    public Long getExecutionTime() {
+        return executionTime;
+    }
 }
