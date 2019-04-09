@@ -23,6 +23,10 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 public abstract class BaseReparationAlgorithm implements ReparationAlgorithm {
 
     protected Random random;
+    protected Long executionTime;
+    protected long startInstant;
+    protected int objectiveFunctionEvaluations;
+    protected Double currentOptimum;
 
 
     protected List<Action> createAction(UiDevice device, Integer seed) {
@@ -59,11 +63,6 @@ public abstract class BaseReparationAlgorithm implements ReparationAlgorithm {
     protected void startApp(String appPackage) throws UiObjectNotFoundException {
         StartAppAction action = new StartAppAction(appPackage);
         action.perform();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-
-        }
     }
 
     public Random getRandom() {
@@ -76,6 +75,18 @@ public abstract class BaseReparationAlgorithm implements ReparationAlgorithm {
 
     public void setRandom(Random random) {
         this.random = random;
+    }
+
+    public Long getExecutionTime() {
+        return executionTime;
+    }
+
+    public Double getCurrentOptimum() {
+        return currentOptimum;
+    }
+
+    public int getObjectiveFunctionEvaluations() {
+        return objectiveFunctionEvaluations;
     }
 
 }

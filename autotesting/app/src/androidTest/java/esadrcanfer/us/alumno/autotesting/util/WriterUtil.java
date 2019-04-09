@@ -20,10 +20,14 @@ import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
 
 public class WriterUtil {
 	private File logFile;
-	
-	public WriterUtil() {
+
+	public WriterUtil(){
+		this("TestCase-");
+	}
+
+	public WriterUtil(String basefilename) {
 		String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-		String filename = "TestCase-" + timeLog+".txt";
+		String filename = basefilename + timeLog+".txt";
 		this.logFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), filename);
 	}
 	

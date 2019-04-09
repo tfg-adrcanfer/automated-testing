@@ -21,7 +21,7 @@ import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 import static android.os.SystemClock.sleep;
 import static esadrcanfer.us.alumno.autotesting.tests.AutomaticRepairTests.labelsDetection;
 
-public class RecycleReparation {
+public class RecycleReparation extends BaseReparationAlgorithm{
 
     long maxIterations;
     List<Action> beforeActions;
@@ -102,36 +102,11 @@ public class RecycleReparation {
         return res;
     }
 
-    private List<Action> createAction(UiDevice device, Integer seed) {
-        Map<UiObject, Action> actions;
-        actions = ActionFactory.createActions(device, seed);
-        return new ArrayList<>(actions.values());
-    }
 
-    private void closeApp(String appPackage) {
-        CloseAppAction action = new CloseAppAction(appPackage);
-        action.perform();
-    }
 
-    private void startApp(String appPackage) throws UiObjectNotFoundException {
-        StartAppAction action = new StartAppAction(appPackage);
-        action.perform();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-
-        }
-    }
-
-    public Random getRandom() {
-        if (random == null) {
-            random = new Random();
-        }
-        return random;
-    }
-
-    public void setRandom(Random random) {
-        this.random = random;
+    @Override
+    public TestCase repair(UiDevice device, TestCase buggyTestCase, int breakingPoint) throws UiObjectNotFoundException {
+        return run(device);
     }
 
     /**public boolean isSameNode(UiDevice device, List<Action> availableActions, Random random) {

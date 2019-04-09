@@ -81,6 +81,46 @@ public class AutomaticRepairTests {
 
 
     @Test
+    public void testMultiExecutionGRASP()  throws UiObjectNotFoundException {
+        GRASPReparation grasp=null;
+        String test="Broken2-EditionTestCase";
+        String path="Download/BrokenTest/"+test+".txt";
+        int nRuns=10;
+        boolean fixed;
+        UiDevice device = UiDevice.getInstance(getInstrumentation());
+        ReadUtil readUtil = new ReadUtil(path, false);
+        TestCase testCase = readUtil.generateTestCase();
+        try {
+            testCase.executeBefore();
+            List<String> initialState = labelsDetection();
+            testCase.executeTest();
+            List<String> finalState = labelsDetection();
+            testCase.setInitialState(initialState);
+            testCase.setFinalState(finalState);
+            Boolean eval = testCase.evaluate();
+            testCase.executeAfter();
+            Log.d("ISA", "The test case is OK!");
+            Log.d("ISA", "It evaluates to: "+eval);
+            Log.d("ISA","initialState: "+testCase.getInitialState());
+            Log.d("ISA","finalState: "+testCase.getFinalState());
+
+        } catch (BrokenTestCaseException ex) {
+            testCase.executeAfter();
+            Log.d("ISA", "The test case is broken at step " + ex.getBreakingIndex() + "with message '" + ex.getMessage() + "'");
+            Log.d("ISA", "Repairing it...");
+            TestCase solution;
+            WriterUtil writerUtil = new WriterUtil("Execution-"+ test + "-GRASP.csv");
+            writerUtil.write("Algorithm;Execution;Test;NClausesMeet;PredicateClauses;Fixed;ExecutionTime;ObjectiveFunctionEvaluations;Solution");
+            for (int i = 0; i < nRuns; i++) {
+                grasp = new GRASPReparation(10, 3, 5);
+                solution = grasp.repair(device, testCase, (int) ex.getBreakingIndex());
+                fixed=(solution.getPredicate().getNClauses()==grasp.getCurrentOptimum().intValue());
+                writerUtil.write("GRASP;"+i+";"+test+";"+grasp.getCurrentOptimum()+";"+solution.getPredicate().getNClauses()+";"+fixed+";"+grasp.getExecutionTime()+";"+grasp.getObjectiveFunctionEvaluations()+";"+solution);
+            }
+        }
+    }
+
+    @Test
     public void testGRASPReparation() throws UiObjectNotFoundException {
         UiDevice device = UiDevice.getInstance(getInstrumentation());
         ReadUtil readUtil = new ReadUtil("Download/BrokenTest/Broken2-CreationTestCase.txt", false);

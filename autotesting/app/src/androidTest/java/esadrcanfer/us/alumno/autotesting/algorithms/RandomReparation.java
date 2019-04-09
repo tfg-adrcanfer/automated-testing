@@ -22,14 +22,13 @@ import esadrcanfer.us.alumno.autotesting.util.WriterUtil;
 import static android.os.SystemClock.sleep;
 import static esadrcanfer.us.alumno.autotesting.tests.AutomaticRepairTests.labelsDetection;
 
-public class RandomReparation {
+public class RandomReparation extends BaseReparationAlgorithm{
 
     long maxIterations;
     List<Action> beforeActions;
     List<Action> afterActions;
     List<Action> testActions;
     TestCase bugTestCase;
-    Random random;
 
     public RandomReparation(long maxIterations, TestCase bugTestCase, String appPackage) {
         this.maxIterations = maxIterations;
@@ -42,6 +41,9 @@ public class RandomReparation {
     }
 
     public TestCase run(UiDevice device, String appPackage) throws UiObjectNotFoundException {
+        startInstant=System.currentTimeMillis();
+        objectiveFunctionEvaluations=0;
+        currentOptimum=0.0;
         int i = 0;
         List<Action> testCaseActions;
         List<Action> availableActions;
@@ -74,10 +76,12 @@ public class RandomReparation {
             res = new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, initialState, finalState);
             res.setPredicate(bugTestCase.getPredicate());
             eval = res.evaluate();
+            objectiveFunctionEvaluations++;
             sleep(2000);
             Log.d("ISA", "Eval: " + eval);
             i++;
             if (eval == true) {
+                currentOptimum=(double)bugTestCase.getPredicate().getNClauses();
                 break;
             }
         }
@@ -89,41 +93,15 @@ public class RandomReparation {
                 writerUtil.write(a.toString());
             }
         */
-
+        executionTime=System.currentTimeMillis()-startInstant;
         return res;
     }
 
-    private List<Action> createAction(UiDevice device, Integer seed) {
-        Map<UiObject, Action> actions;
-        actions = ActionFactory.createActions(device, seed);
-        return new ArrayList<>(actions.values());
+    @Override
+    public TestCase repair(UiDevice device, TestCase buggyTestCase, int breakingPoint) throws UiObjectNotFoundException {
+        return run(device,buggyTestCase.getAppPackage());
     }
 
-    private void closeApp(String appPackage) {
-        CloseAppAction action = new CloseAppAction(appPackage);
-        action.perform();
-    }
-
-    private void startApp(String appPackage) throws UiObjectNotFoundException {
-        StartAppAction action = new StartAppAction(appPackage);
-        action.perform();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-
-        }
-    }
-
-    public Random getRandom() {
-        if (random == null) {
-            random = new Random();
-        }
-        return random;
-    }
-
-    public void setRandom(Random random) {
-        this.random = random;
-    }
 
     /**public boolean isSameNode(UiDevice device, List<Action> availableActions, Random random) {
      boolean result = true;

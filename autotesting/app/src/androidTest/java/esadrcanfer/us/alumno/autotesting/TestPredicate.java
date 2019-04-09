@@ -3,6 +3,7 @@ package esadrcanfer.us.alumno.autotesting;
 import java.util.List;
 import java.util.ArrayList;
 import esadrcanfer.us.alumno.autotesting.util.PredicateEvaluator;
+import org.springframework.expression.spel.SpelEvaluationException;
 
 
 public class TestPredicate {
@@ -32,9 +33,14 @@ public class TestPredicate {
         PredicateEvaluator predicateEvaluator = new PredicateEvaluator();
         Boolean res;
         for(String clause:clauses) {
-            res = predicateEvaluator.evaluate(testCase);
-            if (res)
-                result++;
+            try {
+                res = predicateEvaluator.evaluate(testCase);
+                if (res)
+                    result++;
+            }catch(SpelEvaluationException ex){
+                System.out.println(ex.getMessage());
+                ex.printStackTrace();
+            }
         }
         return result;
     }

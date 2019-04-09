@@ -167,4 +167,8 @@ public class TestCase {
     public Set<String> getExceutionContext() {
         return executionContext;
     }
+
+    public void setTestActions(List<Action> testActions) {
+        this.testActions=testActions;
+    }
 }

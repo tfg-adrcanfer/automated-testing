@@ -21,6 +21,11 @@ public class StartAppAction extends Action {
         Intent intent = context.getPackageManager().getLaunchIntentForPackage(appPackage);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+
+        }
     }
 
     @Override
