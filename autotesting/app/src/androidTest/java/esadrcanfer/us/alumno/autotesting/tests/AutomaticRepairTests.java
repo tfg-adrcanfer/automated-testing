@@ -57,7 +57,7 @@ public class AutomaticRepairTests {
     @Test
     public void testRecycleReparation() throws UiObjectNotFoundException {
         UiDevice device = UiDevice.getInstance(getInstrumentation());
-        ReadUtil readUtil = new ReadUtil("TestCase-create.txt", false);
+        ReadUtil readUtil = new ReadUtil("TestCase-complex.txt", true);
         TestCase testCase = readUtil.generateTestCase();
         Log.d("ISA", "Loadded test case from file!");
         Log.d("ISA", "Executing it...");
@@ -155,6 +155,7 @@ public class AutomaticRepairTests {
         //createTestCase();
         //editTestCase();
         //deleteTestCase();
+        complexTestCase();
     }
 
     public static TestCase createTestCase() throws UiObjectNotFoundException {
@@ -249,6 +250,38 @@ public class AutomaticRepairTests {
         testCase.setInitialState(initialState);
         testCase.setFinalState(finalState);
         testCase.setPredicate("finalState.size() < initialState.size()");
+        WriterUtil writerUtil = new WriterUtil();
+        writerUtil.write(testCase,seed);
+        /*writerUtil.write(initialState.toString());
+        writerUtil.write(finalState.toString());*/
+        return testCase;
+    }
+
+
+    public static TestCase complexTestCase() throws UiObjectNotFoundException {
+        Log.d("ISA", "Building Test case...");
+        String appPackage = "esadrcanfer.us.complexapp";
+        Random randomSeed = new Random();
+        int seed = randomSeed.nextInt();
+        Random random = new Random(seed);
+        List<Action> beforeActions = new ArrayList<>();
+        List<Action> afterActions = new ArrayList<>();
+        List<Action> testActions = new ArrayList<>();
+        beforeActions.add(new StartAppAction(appPackage));
+        afterActions.add(new CloseAppAction(appPackage));
+        Action createNoteButton = ReadUtil.generateActionFromSimpleString("BUTTON, UiSelector[RESOURCE_ID=esadrcanfer.us.complexapp:id/button5]", random.nextInt());
+        testActions.add(createNoteButton);
+        Action addNoteText = ReadUtil.generateActionFromSimpleString("RADIO_BUTTON, UiSelector[RESOURCE_ID=esadrcanfer.us.complexapp:id/radio]", random.nextInt());
+        testActions.add(addNoteText);
+        TestCase testCase = new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testActions, afterActions, new ArrayList<>(), new ArrayList<>());
+        testCase.executeBefore();
+        List<String> initialState = labelsDetection();
+        testCase.executeTest();
+        List<String> finalState = labelsDetection();
+        testCase.executeAfter();
+        testCase.setInitialState(initialState);
+        testCase.setFinalState(finalState);
+        testCase.setPredicate("finalState.contains(testActions[1].value)");
         WriterUtil writerUtil = new WriterUtil();
         writerUtil.write(testCase,seed);
         /*writerUtil.write(initialState.toString());
