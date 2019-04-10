@@ -26,4 +26,17 @@ public class PredicateEvaluator {
         }
         return result;
     }
+
+    public boolean evaluate(String clause,TestCase testCase) throws IllegalArgumentException {
+        boolean result = false;
+        Expression exp = expressionParser.parseExpression(clause);
+        EvaluationContext context = new StandardEvaluationContext(testCase);
+        Object assertionResult = exp.getValue(context);
+        if (assertionResult instanceof Boolean) {
+            result = (Boolean) assertionResult;
+        } else {
+            throw new IllegalArgumentException("The assertion '" + testCase.getPredicate() + "' is not a valid, since its evaluation does not return a boolean result");
+        }
+        return result;
+    }
 }

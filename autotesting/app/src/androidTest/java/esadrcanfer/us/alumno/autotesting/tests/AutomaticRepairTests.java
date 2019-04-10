@@ -16,6 +16,7 @@ import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import esadrcanfer.us.alumno.autotesting.BrokenTestCaseException;
 import esadrcanfer.us.alumno.autotesting.TestCase;
+import esadrcanfer.us.alumno.autotesting.algorithms.BaseReparationAlgorithm;
 import esadrcanfer.us.alumno.autotesting.algorithms.GRASPReparation;
 import esadrcanfer.us.alumno.autotesting.algorithms.RandomReparation;
 import esadrcanfer.us.alumno.autotesting.algorithms.RecycleReparation;
@@ -79,11 +80,91 @@ public class AutomaticRepairTests {
         Log.d("ISA", "TestCase found: " + testCase);
     }
 
+    @Test
+    public void TestMultiExecutionRandomReparation()  throws UiObjectNotFoundException {
+        RandomReparation algorithm=null;
+        String test="Broken-CreationTestCase";
+        String path="Download/BrokenTest/"+test+".txt";
+        int nRuns=10;
+        boolean fixed;
+        UiDevice device = UiDevice.getInstance(getInstrumentation());
+        ReadUtil readUtil = new ReadUtil(path, false);
+        TestCase testCase = readUtil.generateTestCase();
+        try {
+            testCase.executeBefore();
+            List<String> initialState = labelsDetection();
+            testCase.executeTest();
+            List<String> finalState = labelsDetection();
+            testCase.setInitialState(initialState);
+            testCase.setFinalState(finalState);
+            Boolean eval = testCase.evaluate();
+            testCase.executeAfter();
+            Log.d("ISA", "The test case is OK!");
+            Log.d("ISA", "It evaluates to: "+eval);
+            Log.d("ISA","initialState: "+testCase.getInitialState());
+            Log.d("ISA","finalState: "+testCase.getFinalState());
+
+        } catch (BrokenTestCaseException ex) {
+            testCase.executeAfter();
+            Log.d("ISA", "The test case is broken at step " + ex.getBreakingIndex() + "with message '" + ex.getMessage() + "'");
+            Log.d("ISA", "Repairing it...");
+            TestCase solution;
+            WriterUtil writerUtil = new WriterUtil("RandomScratchExecution-"+ test + "-GRASP.csv");
+            writerUtil.write("Algorithm;Execution;Test;NClausesMeet;PredicateClauses;Fixed;ExecutionTime;ObjectiveFunctionEvaluations;Solution");
+            for (int i = 0; i < nRuns; i++) {
+                algorithm = new RandomReparation(50, testCase, testCase.getAppPackage());
+                solution =  algorithm.repair(device, testCase, (int) ex.getBreakingIndex());
+                fixed= algorithm.getCurrentOptimum()!=null &&  (solution.getPredicate().getNClauses()==algorithm.getCurrentOptimum().intValue());
+                writerUtil.write("RandomFromScratch;"+i+";"+test+";"+algorithm.getCurrentOptimum()+";"+solution.getPredicate().getNClauses()+";"+fixed+";"+algorithm.getExecutionTime()+";"+algorithm.getObjectiveFunctionEvaluations()+";"+solution);
+            }
+        }
+    }
+
+    @Test
+    public void TestMultiExecutionRecycleReparation()  throws UiObjectNotFoundException {
+        RecycleReparation algorithm=null;
+        String test="Broken-EditionTestCase";
+        String path="Download/BrokenTest/"+test+".txt";
+        int nRuns=10;
+        boolean fixed;
+        UiDevice device = UiDevice.getInstance(getInstrumentation());
+        ReadUtil readUtil = new ReadUtil(path, false);
+        TestCase testCase = readUtil.generateTestCase();
+        try {
+            testCase.executeBefore();
+            List<String> initialState = labelsDetection();
+            testCase.executeTest();
+            List<String> finalState = labelsDetection();
+            testCase.setInitialState(initialState);
+            testCase.setFinalState(finalState);
+            Boolean eval = testCase.evaluate();
+            testCase.executeAfter();
+            Log.d("ISA", "The test case is OK!");
+            Log.d("ISA", "It evaluates to: "+eval);
+            Log.d("ISA","initialState: "+testCase.getInitialState());
+            Log.d("ISA","finalState: "+testCase.getFinalState());
+
+        } catch (BrokenTestCaseException ex) {
+            testCase.executeAfter();
+            Log.d("ISA", "The test case is broken at step " + ex.getBreakingIndex() + "with message '" + ex.getMessage() + "'");
+            Log.d("ISA", "Repairing it...");
+            TestCase solution;
+            WriterUtil writerUtil = new WriterUtil("RandomRecycleExecution-"+ test + "-GRASP.csv");
+            writerUtil.write("Algorithm;Execution;Test;NClausesMeet;PredicateClauses;Fixed;ExecutionTime;ObjectiveFunctionEvaluations;Solution");
+            for (int i = 0; i < nRuns; i++) {
+                algorithm = new RecycleReparation(50, testCase, (int)ex.getBreakingIndex());
+                solution = algorithm.repair(device, testCase, (int) ex.getBreakingIndex());
+                fixed=algorithm.getCurrentOptimum()!=null && (solution.getPredicate().getNClauses()==algorithm.getCurrentOptimum().intValue());
+                writerUtil.write("RandomFromScratch;"+i+";"+test+";"+algorithm.getCurrentOptimum()+";"+solution.getPredicate().getNClauses()+";"+fixed+";"+algorithm.getExecutionTime()+";"+algorithm.getObjectiveFunctionEvaluations()+";"+solution);
+            }
+        }
+    }
+
 
     @Test
     public void testMultiExecutionGRASP()  throws UiObjectNotFoundException {
         GRASPReparation grasp=null;
-        String test="Broken2-EditionTestCase";
+        String test="Broken-EditionTestCase";
         String path="Download/BrokenTest/"+test+".txt";
         int nRuns=10;
         boolean fixed;

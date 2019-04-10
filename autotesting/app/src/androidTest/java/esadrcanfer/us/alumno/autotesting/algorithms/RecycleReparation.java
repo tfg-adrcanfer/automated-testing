@@ -60,35 +60,42 @@ public class RecycleReparation extends BaseReparationAlgorithm{
             Random chosenSeed = new Random();
             Long seed = chosenSeed.nextLong();
             Random seeds = new Random(seed);
-            startApp(bugTestCase.getAppPackage());
-            testCaseActions = new ArrayList<>(validActions);
-            for (Action a: testCaseActions){
-                a.perform();
-            }
-            availableActions = createAction(device, seeds.nextInt());
-            List<String> initialState = labelsDetection();
-            while (testCaseActions.size() < bugTestCase.getTestActions().size() && availableActions.size() > 0) {
-                chosenAction = availableActions.get(getRandom().nextInt(availableActions.size()));
-                testCaseActions.add(chosenAction);
-                Log.d("ISA", "Executing action: " + chosenAction);
-                chosenAction.perform();
-                String appName = UiDevice.getInstance().getCurrentPackageName();
-                if (!appName.equals(bugTestCase.getAppPackage())) {
+            try {
+                startApp(bugTestCase.getAppPackage());
+                List<String> initialState = labelsDetection();
+                testCaseActions = new ArrayList<>(validActions);
+
+                for (Action a : testCaseActions) {
+                    a.perform();
+                }
+
+                availableActions = createAction(device, seeds.nextInt());
+                while (testCaseActions.size() < bugTestCase.getTestActions().size() && availableActions.size() > 0) {
+                    chosenAction = availableActions.get(getRandom().nextInt(availableActions.size()));
+                    testCaseActions.add(chosenAction);
+                    Log.d("ISA", "Executing action: " + chosenAction);
+                    chosenAction.perform();
+                    String appName = UiDevice.getInstance().getCurrentPackageName();
+                    if (!appName.equals(bugTestCase.getAppPackage())) {
+                        break;
+                    }
+                    availableActions = createAction(device, seeds.nextInt());
+                }
+                List<String> finalState = labelsDetection();
+                closeApp(bugTestCase.getAppPackage());
+                res = new TestCase(bugTestCase.getAppPackage(), Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, initialState, finalState);
+                res.setPredicate(bugTestCase.getPredicate());
+                eval = res.evaluate();
+                sleep(2000);
+                Log.d("ISA", "Eval: " + eval);
+
+                if (eval == true) {
                     break;
                 }
-                availableActions = createAction(device, seeds.nextInt());
+            }catch(UiObjectNotFoundException ex){
+                ex.printStackTrace();
             }
-            List<String> finalState = labelsDetection();
-            closeApp(bugTestCase.getAppPackage());
-            res = new TestCase(bugTestCase.getAppPackage(), Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, initialState, finalState);
-            res.setPredicate(bugTestCase.getPredicate());
-            eval = res.evaluate();
-            sleep(2000);
-            Log.d("ISA", "Eval: " + eval);
             i++;
-            if (eval == true) {
-                break;
-            }
         }
         //TODO Escribir el testCase en un fichero
         /*    writerUtil = new WriterUtil();

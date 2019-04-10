@@ -179,8 +179,13 @@ public class GRASPReparation extends BaseReparationAlgorithm {
             System.out.println("The set of available actions is empty");
             return RCL;
         }
+        Action originalAction=null;
+        if(bugTestCase.getTestActions().size()>testCaseActions.size())
+            originalAction=bugTestCase.getTestActions().get( testCaseActions.size());
         for(Action candidate:availableActions){
-            if(containsActionOnObject(actionsAfterBreakingPoint,candidate) && !containsActionOnObject(testCaseActions,candidate))
+            if((containsActionOnObject(actionsAfterBreakingPoint,candidate) ||
+                    (originalAction!=null && originalAction.getClass().equals(candidate.getClass())))
+                    && !containsActionOnObject(testCaseActions,candidate))
                 RCL.add(candidate);
         }
         if(RCL.isEmpty())

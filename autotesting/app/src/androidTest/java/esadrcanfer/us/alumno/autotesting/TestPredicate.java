@@ -34,7 +34,7 @@ public class TestPredicate {
         Boolean res;
         for(String clause:clauses) {
             try {
-                res = predicateEvaluator.evaluate(testCase);
+                res = predicateEvaluator.evaluate(clause,testCase);
                 if (res)
                     result++;
             }catch(SpelEvaluationException ex){
