@@ -60,7 +60,7 @@ public class RandomReparation extends BaseReparationAlgorithm{
             testCaseActions = new ArrayList<>();
             availableActions = createAction(device, seeds.nextInt());
             List<String> initialState = labelsDetection();
-            while (testCaseActions.size() < bugTestCase.getTestActions().size() && availableActions.size() > 0) {
+            while (testCaseActions.size() < bugTestCase.getTestActions().size()*2 && availableActions.size() > 0) {
                 chosenAction = availableActions.get(getRandom().nextInt(availableActions.size()));
                 testCaseActions.add(chosenAction);
                 Log.d("ISA", "Executing action: " + chosenAction);
@@ -69,20 +69,20 @@ public class RandomReparation extends BaseReparationAlgorithm{
                 if (!appName.equals(appPackage)) {
                     break;
                 }
+                if(testActions.size()>=bugTestCase.getTestActions().size()){
+                    List<String> finalState = labelsDetection();
+                    closeApp(bugTestCase.getAppPackage());
+                    res = new TestCase(bugTestCase.getAppPackage(), Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, initialState, finalState);
+                    res.setPredicate(bugTestCase.getPredicate());
+                    eval = res.evaluate();
+                    objectiveFunctionEvaluations++;
+                    if (eval == true) {
+                        currentOptimum=(double)bugTestCase.getPredicate().getNClauses();
+                        executionTime=System.currentTimeMillis()-startInstant;
+                        return res;
+                    }
+                }
                 availableActions = createAction(device, seeds.nextInt());
-            }
-            List<String> finalState = labelsDetection();
-            closeApp(appPackage);
-            res = new TestCase(appPackage, Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, initialState, finalState);
-            res.setPredicate(bugTestCase.getPredicate());
-            eval = res.evaluate();
-            objectiveFunctionEvaluations++;
-            sleep(2000);
-            Log.d("ISA", "Eval: " + eval);
-            i++;
-            if (eval == true) {
-                currentOptimum=(double)bugTestCase.getPredicate().getNClauses();
-                break;
             }
         }
         //TODO Escribir el testCase en un fichero

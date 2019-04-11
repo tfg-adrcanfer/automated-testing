@@ -44,6 +44,9 @@ public class RecycleReparation extends BaseReparationAlgorithm{
 
     public TestCase run(UiDevice device) throws UiObjectNotFoundException {
 
+        startInstant=System.currentTimeMillis();
+        objectiveFunctionEvaluations=0;
+        currentOptimum=0.0;
         List<Action> testCaseActions;
         List<Action> availableActions;
         WriterUtil writerUtil = null;
@@ -70,7 +73,7 @@ public class RecycleReparation extends BaseReparationAlgorithm{
                 }
 
                 availableActions = createAction(device, seeds.nextInt());
-                while (testCaseActions.size() < bugTestCase.getTestActions().size() && availableActions.size() > 0) {
+                while (testCaseActions.size() < bugTestCase.getTestActions().size()*2 && availableActions.size() > 0) {
                     chosenAction = availableActions.get(getRandom().nextInt(availableActions.size()));
                     testCaseActions.add(chosenAction);
                     Log.d("ISA", "Executing action: " + chosenAction);
@@ -79,19 +82,23 @@ public class RecycleReparation extends BaseReparationAlgorithm{
                     if (!appName.equals(bugTestCase.getAppPackage())) {
                         break;
                     }
+                    if(testActions.size()>=bugTestCase.getTestActions().size()){
+                        List<String> finalState = labelsDetection();
+                        closeApp(bugTestCase.getAppPackage());
+                        res = new TestCase(bugTestCase.getAppPackage(), Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, initialState, finalState);
+                        res.setPredicate(bugTestCase.getPredicate());
+                        eval = res.evaluate();
+                        objectiveFunctionEvaluations++;
+                        if (eval == true) {
+                            currentOptimum=(double)bugTestCase.getPredicate().getNClauses();
+                            executionTime=System.currentTimeMillis()-startInstant;
+                            return res;
+                        }
+                    }
+
                     availableActions = createAction(device, seeds.nextInt());
                 }
-                List<String> finalState = labelsDetection();
-                closeApp(bugTestCase.getAppPackage());
-                res = new TestCase(bugTestCase.getAppPackage(), Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, initialState, finalState);
-                res.setPredicate(bugTestCase.getPredicate());
-                eval = res.evaluate();
-                sleep(2000);
-                Log.d("ISA", "Eval: " + eval);
 
-                if (eval == true) {
-                    break;
-                }
             }catch(UiObjectNotFoundException ex){
                 ex.printStackTrace();
             }
@@ -105,7 +112,7 @@ public class RecycleReparation extends BaseReparationAlgorithm{
                 writerUtil.write(a.toString());
             }
         */
-
+        executionTime=System.currentTimeMillis()-startInstant;
         return res;
     }
 

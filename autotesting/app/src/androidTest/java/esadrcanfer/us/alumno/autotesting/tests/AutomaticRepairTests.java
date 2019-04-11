@@ -123,7 +123,7 @@ public class AutomaticRepairTests {
     @Test
     public void TestMultiExecutionRecycleReparation()  throws UiObjectNotFoundException {
         RecycleReparation algorithm=null;
-        String test="Broken-EditionTestCase";
+        String test="Broken2-DeletionTestCase";
         String path="Download/BrokenTest/"+test+".txt";
         int nRuns=10;
         boolean fixed;
