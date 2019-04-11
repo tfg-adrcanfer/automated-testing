@@ -82,7 +82,7 @@ public class RecycleReparation extends BaseReparationAlgorithm{
                     if (!appName.equals(bugTestCase.getAppPackage())) {
                         break;
                     }
-                    if(testActions.size()>=bugTestCase.getTestActions().size()){
+                    if(testCaseActions.size()>=bugTestCase.getTestActions().size()){
                         List<String> finalState = labelsDetection();
                         closeApp(bugTestCase.getAppPackage());
                         res = new TestCase(bugTestCase.getAppPackage(), Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, initialState, finalState);
