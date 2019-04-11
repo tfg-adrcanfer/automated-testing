@@ -21,19 +21,19 @@ public class Main2Activity extends AppCompatActivity {
 
     public void print1(View view) {
         TextView textView = findViewById(R.id.textView4);
-        textView.setText("Seleccionado Radio Button 1");
+        textView.setText("Seleccionado CheckBox 1");
     }
 
     public void print2(View view) {
         TextView textView = findViewById(R.id.textView4);
-        textView.setText("Seleccionado Radio Button 2");
+        textView.setText("Seleccionado CheckBox 2");
     }
 
     public void print3(View view) {
         TextView textView = findViewById(R.id.textView4);
-        textView.setText("Seleccionado Radio Button 3");
+        textView.setText("Seleccionado CheckBox 3");
         Intent intent = new Intent(view.getContext(), MainActivity.class);
-        intent.putExtra("text", "RadioButton3");
+        intent.putExtra("text", "CheckBox3");
         startActivity(intent);
     }
 }

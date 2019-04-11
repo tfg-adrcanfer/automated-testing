@@ -34,47 +34,28 @@
         android:layout_centerHorizontal="true"/>
 
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView4"
-        android:ems="10"
-        android:inputType="text"
-        android:hint="Introduzca texto"
-        android:text="" />
-
-    <RadioGroup
-        android:id="@+id/radio"
+    <CheckBox
+        android:id="@+id/checkBox1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editText"
-        android:layout_centerHorizontal="true">
+        android:text="CheckBox1"
+        android:layout_below="@+id/textView4"
+        android:onClick="print1"/>
 
-        <RadioButton
-            android:id="@+id/radioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="print1"
-            android:text="RadioButton1" />
+    <CheckBox
+        android:id="@+id/checkBox2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CheckBox2"
+        android:layout_below="@+id/checkBox1"
+        android:onClick="print2"/>
 
-        <RadioButton
-            android:id="@+id/radioButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="print2"
-            android:text="RadioButton2" />
-
-        <RadioButton
-            android:id="@+id/radioButton3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="print3"
-            android:text="RadioButton3" />
-    </RadioGroup>
-
+    <CheckBox
+        android:id="@+id/checkBox3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CheckBox3"
+        android:layout_below="@+id/checkBox2"
+        android:onClick="print3"/>
 
 </RelativeLayout>
