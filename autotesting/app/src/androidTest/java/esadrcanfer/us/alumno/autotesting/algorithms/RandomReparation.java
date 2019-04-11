@@ -71,7 +71,6 @@ public class RandomReparation extends BaseReparationAlgorithm{
                 }
                 if(testCaseActions.size()>=bugTestCase.getTestActions().size()){
                     List<String> finalState = labelsDetection();
-                    closeApp(bugTestCase.getAppPackage());
                     res = new TestCase(bugTestCase.getAppPackage(), Collections.EMPTY_SET, beforeActions, testCaseActions, afterActions, initialState, finalState);
                     res.setPredicate(bugTestCase.getPredicate());
                     eval = res.evaluate();
@@ -84,6 +83,7 @@ public class RandomReparation extends BaseReparationAlgorithm{
                 }
                 availableActions = createAction(device, seeds.nextInt());
             }
+            closeApp(bugTestCase.getAppPackage());
         }
         //TODO Escribir el testCase en un fichero
         /*    writerUtil = new WriterUtil();
