@@ -84,6 +84,7 @@ public class RandomReparation extends BaseReparationAlgorithm{
                 availableActions = createAction(device, seeds.nextInt());
             }
             closeApp(bugTestCase.getAppPackage());
+            i++;
         }
         //TODO Escribir el testCase en un fichero
         /*    writerUtil = new WriterUtil();
