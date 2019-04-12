@@ -63,14 +63,19 @@ public class RecycleReparation extends BaseReparationAlgorithm{
             Random chosenSeed = new Random();
             Long seed = chosenSeed.nextLong();
             Random seeds = new Random(seed);
+            startApp(bugTestCase.getAppPackage());
+            List<String> initialState = labelsDetection();
+            testCaseActions = new ArrayList<>();
             try {
-                startApp(bugTestCase.getAppPackage());
-                List<String> initialState = labelsDetection();
-                testCaseActions = new ArrayList<>(validActions);
 
                 for (Action a : testCaseActions) {
                     a.perform();
+                    testCaseActions.add(a);
                 }
+            }catch(UiObjectNotFoundException ex){
+                ex.printStackTrace();
+            }
+            try{
 
                 availableActions = createAction(device, seeds.nextInt());
                 while (testCaseActions.size() < bugTestCase.getTestActions().size()*2 && availableActions.size() > 0) {

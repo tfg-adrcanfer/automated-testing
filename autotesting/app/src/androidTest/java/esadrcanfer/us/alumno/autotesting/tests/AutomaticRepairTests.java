@@ -83,7 +83,7 @@ public class AutomaticRepairTests {
     @Test
     public void TestMultiExecutionRandomReparation()  throws UiObjectNotFoundException {
         RandomReparation algorithm=null;
-        String test="Broken-CreationTestCase";
+        String test="Broken2-DeletionTestCase";
         String path="Download/BrokenTest/"+test+".txt";
         int nRuns=10;
         boolean fixed;
@@ -123,7 +123,7 @@ public class AutomaticRepairTests {
     @Test
     public void TestMultiExecutionRecycleReparation()  throws UiObjectNotFoundException {
         RecycleReparation algorithm=null;
-        String test="Broken2-DeletionTestCase";
+        String test="Broken-CancelCreationTestCase";
         String path="Download/BrokenTest/"+test+".txt";
         int nRuns=10;
         boolean fixed;
@@ -155,7 +155,7 @@ public class AutomaticRepairTests {
                 algorithm = new RecycleReparation(50, testCase, (int)ex.getBreakingIndex());
                 solution = algorithm.repair(device, testCase, (int) ex.getBreakingIndex());
                 fixed=algorithm.getCurrentOptimum()!=null && (solution.getPredicate().getNClauses()==algorithm.getCurrentOptimum().intValue());
-                writerUtil.write("RandomFromScratch;"+i+";"+test+";"+algorithm.getCurrentOptimum()+";"+solution.getPredicate().getNClauses()+";"+fixed+";"+algorithm.getExecutionTime()+";"+algorithm.getObjectiveFunctionEvaluations()+";"+solution);
+                writerUtil.write("RandomRecycle;"+i+";"+test+";"+algorithm.getCurrentOptimum()+";"+solution.getPredicate().getNClauses()+";"+fixed+";"+algorithm.getExecutionTime()+";"+algorithm.getObjectiveFunctionEvaluations()+";"+solution);
             }
         }
     }
