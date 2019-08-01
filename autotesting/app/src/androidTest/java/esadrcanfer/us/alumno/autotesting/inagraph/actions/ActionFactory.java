@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import androidx.test.uiautomator.StaleObjectException;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
 
@@ -24,9 +25,13 @@ public class ActionFactory {
 
     public static Map<UiObject, Action> createButtonActions(UiDevice device) {
         Map<UiObject, Action> result = new HashMap<>();
-        List<UiObject> buttons = ElementIdentifier.findElements(device, "android.widget.Button");
-        for (UiObject input : buttons) {
-            result.put(input, new ButtonAction(input));
+        try{
+            List<UiObject> buttons = ElementIdentifier.findElements(device, "android.widget.Button");
+            for (UiObject input : buttons) {
+                result.put(input, new ButtonAction(input));
+            }
+        }catch(StaleObjectException ex){
+            ex.printStackTrace();
         }
         return result;
     }

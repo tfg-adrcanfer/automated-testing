@@ -5,6 +5,8 @@ import android.os.TestLooperManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import junit.framework.Test;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -74,19 +76,67 @@ public class ReadUtil {
         } else {
             seed = new Random().nextLong();
         }
+        Integer actionsSize = new Integer(lines[2]);
         Random random = new Random(seed);
         String action = "";
-        for(int i = 2; i< lines.length; i++){
+        for(int i = 3; i<= actionsSize + 2; i++){
             action = lines[i];
             testActions.add(generateActionFromString(action, random.nextInt()));
+            if(i == actionsSize+2){
+                actionsSize = i;
+                break;
+            }
         }
+        String predicate = lines[actionsSize+1];
+        List<String> initialLabels = new ArrayList<>();
+        /*
+        String initialState = lines[actionsSize+2].replaceAll("\\[", "").replaceAll("\\]", "");
+        String finalState = lines[actionsSize+3].replaceAll("\\[", "").replaceAll("\\]", "");
+        for (String label: initialState.split(", ")) {
+            initialLabels.add(label);
+        }*/
+        List<String> finalLabels = new ArrayList<>();
+        /*for (String label: finalState.split(", ")) {
+            finalLabels.add(label);
+        }*/
         beforeActions.add(new StartAppAction(appPackage));
         afterActions.add(new CloseAppAction(appPackage));
-
-        return new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions);
+        TestCase testCase = new TestCase(appPackage, Collections.EMPTY_SET,beforeActions,testActions,afterActions, initialLabels, finalLabels);
+        testCase.setPredicate(predicate);
+        return testCase;
     }
 
-    private Action generateActionFromString(String action, Integer seed){
+    public Action generateActionFromString(String action, Integer seed){
+        String[] splitAction = action.split(",");
+        String type = splitAction[0];
+        String resourceId = splitAction[1];
+        String value = splitAction[2];
+        resourceId = splitAction[1].substring(resourceId.indexOf("=") + 1 ,resourceId.length()-1);
+        Action res = null;
+        UiObject object = new UiObject(new UiSelector().resourceId(resourceId));
+        switch (type) {
+            case "BUTTON":
+                res = new ButtonAction(object);
+                break;
+            case "TEXT":
+                TextInputGenerator textInputGenerator = new TextInputGenerator(seed);
+                res = new TextInputAction(object, textInputGenerator);
+                break;
+            case "CHECKBOX":
+                res = new CheckBoxAction(object);
+                break;
+            case "RADIO_BUTTON":
+                RadioButtonInputGenerator radioButtonInputGenerator = new RadioButtonInputGenerator(seed);
+                res = new RadioButtonAction(object, radioButtonInputGenerator);
+        }
+        Log.d("ISA", "Action: " + action);
+        Log.d("ISA", "Value: " + value);
+        res.setValue(value);
+        return res;
+    }
+
+    public static Action generateActionFromSimpleString(String action, Integer seed){
+        Log.d("ISA", action);
         String[] splitAction = action.split(",");
         String type = splitAction[0];
         String resourceId = splitAction[1];

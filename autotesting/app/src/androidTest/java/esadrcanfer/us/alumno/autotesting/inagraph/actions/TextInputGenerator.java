@@ -2,9 +2,12 @@ package esadrcanfer.us.alumno.autotesting.inagraph.actions;
 
 import android.util.Log;
 
+import net.sf.extjwnl.JWNLException;
+
 import java.util.Random;
 
 import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
 import esadrcanfer.us.alumno.autotesting.dictionary.DictionaryBasedValueGenerator;
 
 public class TextInputGenerator extends InputGenerator {
@@ -15,15 +18,20 @@ public class TextInputGenerator extends InputGenerator {
         this.seed = seed;
     }
 
-    public void generateInput(UiObject object) {
+    public String generateInput(UiObject object) throws UiObjectNotFoundException {
+        String value = null;
+
+        DictionaryBasedValueGenerator dictionary = new DictionaryBasedValueGenerator(1, seed);
         try {
-            DictionaryBasedValueGenerator dictionary = new DictionaryBasedValueGenerator(1, seed);
-            String text = dictionary.generate().toString();
-            Log.d("TFG", text);
-            object.setText(text);
-        } catch (Exception e) {
+            value = dictionary.generate().toString();
+            Log.d("TFG", value);
+            object.setText(value);
+        } catch (JWNLException e) {
             e.printStackTrace();
         }
+
+
+        return value;
     }
 
 

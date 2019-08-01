@@ -13,7 +13,7 @@ import esadrcanfer.us.alumno.autotesting.inagraph.CloseAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.INAGraph;
 import esadrcanfer.us.alumno.autotesting.inagraph.StartAppAction;
 import esadrcanfer.us.alumno.autotesting.inagraph.actions.Action;
-import esadrcanfer.us.alumno.autotesting.objectivefunctions.graph.ObjectiveFunction;
+import esadrcanfer.us.alumno.autotesting.objectivefunctions.ObjectiveFunction;
 
 public class RandomSearch {
 
@@ -68,7 +68,7 @@ public class RandomSearch {
             testActions.add(chosenAction);
             graph.fictitiousPerformAction(chosenAction);
         }
-        return new TestCase(app, Collections.EMPTY_SET,beforeActions,testActions,afterActions);
+        return new TestCase(app, Collections.EMPTY_SET,beforeActions,testActions,afterActions, new ArrayList<>(), new ArrayList<>());
     }
 
     public Random getRandom(){

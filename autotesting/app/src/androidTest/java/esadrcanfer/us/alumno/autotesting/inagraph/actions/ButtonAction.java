@@ -9,6 +9,7 @@ public class ButtonAction extends Action {
     }
 
     public void perform() throws UiObjectNotFoundException {
+        value = target.getText();
         this.target.click();
     }
 }

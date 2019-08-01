@@ -7,10 +7,12 @@ public abstract class  Action {
 
     protected UiObject target;
     protected ActionType actionType;
+    protected String value;
 
     public Action(UiObject target, ActionType actionType){
         this.target=target;
         this.actionType = actionType;
+        value = null;
     }
 
     public abstract void perform() throws UiObjectNotFoundException;
@@ -43,10 +45,18 @@ public abstract class  Action {
     }
 
     public String toString(){
-        return actionType+", "+ target.getSelector().toString();
+        return actionType+", "+ target.getSelector().toString()+", "+ value;
     }
 
     public enum ActionType{
         BUTTON, TEXT, CHECKBOX, RADIO_BUTTON, START, STOP, GO_BACK
+    }
+
+    public String getValue(){
+        return value;
+    }
+
+    public void setValue(String value){
+        this.value = value;
     }
 }
